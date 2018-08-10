@@ -3,7 +3,15 @@
 class ViagemController extends \BaseController {
 
 	public function index(){
-		return Cidade::find(1)->estado;
+		$data = [
+			'estados'		=> MainHelper::fixArray(Estado::all(), 'id','nome'),
+			'cidades'		=> MainHelper::fixArray(Cidade::where('estado_id','1')->get(),'id','nome'),
+			'organizacoes'	=> Organizacao::all(),
+			'url'			=> url("viagem/store"),
+			'method'		=> 'POST',
+			'id'			=>	null
+		];
+		return View::make('viagem.form',compact('data'));
 	}
 
 

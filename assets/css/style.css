@@ -7,6 +7,12 @@ body{
     display: block;
     min-height: calc(100% - 50px);    
 }
+
+.section-title{
+    padding-bottom:5px;
+    border-bottom: 1px solid grey;
+}
+
 .footer {
   height: 50px;
   padding: 15px;

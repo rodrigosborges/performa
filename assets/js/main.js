@@ -173,6 +173,19 @@ $(document).ready(function(){
   $(".licitacao").mask("SS/999/9999");
   $(".processo").mask("99999999-9/9999");
 
+  var SPMaskBehavior = function (val) {
+    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+  },
+  spOptions = {
+    onKeyPress: function(val, e, field, options) {
+      field.mask(SPMaskBehavior.apply({}, arguments), options);
+    }
+  };
+
+  $('input.telefone_numero').mask(SPMaskBehavior, spOptions).rules('add',{
+    regex: /\(\d{2}\)\s\d{4,5}-?\d{4}/g,
+  })
+
   $(document).on('click','a.delete-button',function(e){
     e.preventDefault();
     $('<form method="POST" action="'+$(this).attr('href')+'" hidden><input name="_method" value="DELETE"></form>').appendTo('body').submit();

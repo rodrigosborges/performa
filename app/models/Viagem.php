@@ -15,6 +15,10 @@ class Viagem extends Eloquent{
         return $this->belongsTo('Cidade', 'cidade_origem', 'id');
     }
 
+    public function empresa(){
+        return $this->belongsTo('Empresa', 'empresa_id', 'id');
+    }
+
     public function cidade_destino(){
         return $this->belongsTo('Cidade', 'cidade_destino', 'id');
     }

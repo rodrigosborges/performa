@@ -16,8 +16,7 @@ class Pessoa extends Eloquent{
         return $this->belongsTo('Contato', 'contato_id', 'id');
     }
 
-    public function viagens
-    (){
+    public function viagens(){
         return $this->hasMany('Viagem', 'pessoa_id', 'id');
     }
 }

@@ -19,4 +19,8 @@ class Empresa extends Eloquent{
     public function contato(){
         return $this->belongsTo('Contato', 'contato_id', 'id');
     }
+
+    public function viagem(){
+        return $this->hasOne('Viagem', 'empresa_id', 'id');
+    }
 }
