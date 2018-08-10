@@ -1,0 +1,113 @@
+@media print {
+  @page { margin: 0; }
+  body { margin: 1.6cm; }
+}
+
+.imagem{
+    height: 80px;
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.quadrado {
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
+
+* {
+    font-family: arial, sans-serif !important
+}
+
+table{ 
+    border: 1px solid #BBB;
+}
+
+table th{ font-weight: bold}
+table td, table th{
+    padding: 4pt;
+    vertical-align: middle;
+    border-bottom: 1px solid #BBB;
+    border-right: 1px solid #BBB;
+}
+
+.group     { padding-top: 100px; }
+.container { margin: 8px 3px 0 3px; }
+.col-xs-10 { width: 100%;}
+.col-xs-9  { width: 90%; }
+.col-xs-8  { width: 80%; }
+.col-xs-7  { width: 70%; }
+.col-xs-6  { width: 60%; }
+.col-xs-5  { width: 50%; }
+.col-xs-4  { width: 40%; }
+.col-xs-3  { width: 30%; }
+.col-xs-2  { width: 20%; }
+.col-xs-1  { width: 10%; }
+
+ .col-xs-8, .col-xs-7, .col-xs-6, .col-xs-5, .col-xs-4, .col-xs-3, .col-xs-2 {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.print-heading {
+    background: #CCC !important;
+    font-weight: bold;
+    font-size: 14pt;
+    margin-top: 16pt;
+    padding-left: 10px;
+}
+
+.print-line {
+    padding-top: 3pt;
+    padding-bottom: 3pt;
+}
+
+.padded-line{
+    padding: 10px;
+}
+
+b{ font-weight: bold !important; }
+.bold{ font-weight: bold !important; }
+.underline{ text-decoration: underline }
+
+.text-right  { text-align: right; }
+.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-upper  { text-transform: uppercase; }
+.full-table  { width: 100%; }
+.small-text  { font-size: 10pt !important; }
+.medium-text { font-size: 14pt !important; }
+.big-text    { font-size: 20pt !important; }
+.print-heading-text { text-align: center; padding-bottom: 8pt }
+.print-description { font-weight: bold; border-right: 1px solid #BBB; padding-left: 4pt; }
+
+.medium-margin-top{ margin-top: 10pt; }
+
+.resultado{
+    text-decoration: underline;
+    line-height: 150% !important;
+}
+
+.content-width-cell{
+    width: 1%;
+    white-space: nowrap;
+}
+
+table.unbreakable{
+    width: 100%;
+}
+
+table.unbreakable td, table.unbreakable tr, table.unbreakable{
+    border: 0; margin: 0; padding: 0;
+}
+
+.body{
+    margin: 5%;
+}
+
+#header { left: 0px; top: 0px; right: 0px; height: 200px; text-align: center; }
+#footer { position: fixed; left: 0px; bottom: -120px; right: 0px; height: 120px; text-align: center }
+#footer2 { position: fixed; left: 0px; bottom: 0px; right: 0px; height: 120px; text-align: center }
