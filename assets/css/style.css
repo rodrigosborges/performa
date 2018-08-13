@@ -3,6 +3,21 @@ body{
     margin-top: 57px;
 }
 
+.btn-light{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: 1px solid #ced4da;
+    background-color: white;
+}
+
+.btn-light > .filter-option{
+    padding-top: 7px !important;
+}
+
+.btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show>.btn-light.dropdown-toggle, .btn-light:hover{
+    background-color: white;
+}
+
 #body-content{
     display: block;
     min-height: calc(100% - 50px);    

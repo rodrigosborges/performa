@@ -13,6 +13,6 @@ class TipoVisitante extends Eloquent{
     protected $fillable = array('nome');
 
     public function viagens(){
-        return $this->belongsToMany('Viagens', 'viagens_visitantes', 'tipos_visitantes_id', 'viagens_id');
+        return $this->belongsToMany('Viagens', 'viagens_visitantes', 'tipo_visitante_id', 'viagem_id');
     }
 }

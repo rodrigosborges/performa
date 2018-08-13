@@ -14,8 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery-ui.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chosen.min.css') }}">
 	<link rel="icon" type= "image/png" href="{{ asset('assets/img/favicon.png') }}" />
-		<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.min.css">
+	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-select.min.css') }}">
 	
 </head>
 <body>
@@ -95,11 +94,8 @@
 	<script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
 	<script src="{{ asset('assets/js/bibliotecas/jquery/chosen.jquery.min.js')}}"></script>
 	<script src="{{ asset('assets/js/bibliotecas/jquery/jquery-ui.js')}}"></script>
-	<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
-
-<!-- (Optional) Latest compiled and minified JavaScript translation files -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/i18n/defaults-pt_BR.min.js"></script>
+	<script src="{{ asset('assets/js/bibliotecas/bootstrap-select.min.js') }}"></script>
+	<script src="{{ asset('assets/js/bibliotecas/defaults-pt_BR.min.js') }}"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('form#pesquisa').validate()

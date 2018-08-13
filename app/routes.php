@@ -1,7 +1,7 @@
 <?php
 
 Route::get('/', function(){
-	return View::make('hello');
+	return View::make('index');
 });
 
 // Route::get('/generate/models', '\\Jimbolino\\Laravel\\ModelBuilder\\ModelGenerator5@start');

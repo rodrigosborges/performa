@@ -10,8 +10,9 @@ class mainHelper{
 	* @return array $newArray - Array c/ valores atribuidos
 	* @author Rafael Domingues Teixeira
 	*/
-	public static function fixArray($array,$value,$descri){
-		$newArray = array(''=>'Selecione');
+	public static function fixArray($array,$value,$descri, $selecione = 0){
+		if($selecione == 0)
+			$newArray = array(''=>'Selecione');
 
 		foreach ($array as $array) {
 			$newArray[$array[$value]] = $array[$descri];

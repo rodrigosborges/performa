@@ -83,6 +83,19 @@
                 <?= $errors->first('contato.celular') ?>
             </div>
 
+            <div class="form-group col-md-12">
+                <label>Documento do solicitante</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-folder-open" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                    <?= Form::file('documentos[solicitante]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'solicitante')) ?>
+                </div>
+                <?= $errors->first('documentos.solicitante') ?>
+            </div>
+
         </div>
         
         <h4 class="section-title">Visitantes</h4>
@@ -222,7 +235,7 @@
             </div>
         </div>
 
-        <h4 class="section-title">Tipo do(s) veículo(s)</h4>
+        <h4 class="section-title">Veículos</h4>
         <div class="row">
             <div class="form-group col-md-12">
                 <label>Nome da empresa do veículo <span>*</span></label>
@@ -235,7 +248,71 @@
                     <?= Form::text('empresa_veiculo', isset($viagem)? $viagem->empresa->empresa_veiculo : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa do veículo'))?>
                 </div>
                 <?= $errors->first('empresa_veiculo') ?>
-            </div>        
+            </div> 
+        </div>
+        <div id="veiculo">
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label>Tipo do veículo <span>*</span></label>
+                    <div class="input-group recontar">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-list"></span>
+                        </span>
+                        </div>
+                        <?= Form::select('tipoveiculo', $data['tiposveiculos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
+                    </div>
+                <?= $errors->first('tipoveiculo'); ?>
+                </div>  
+                <div class="form-group col-md-4">
+                    <label>Placa do veículo <span>*</span></label>
+                    <div class="input-group recontar">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-car"></span>
+                        </span>
+                        </div>
+                        <?= Form::text('placa', isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
+                    </div>
+                <?= $errors->first('placa'); ?>
+                </div>   
+                <div class="form-group col-md-4">
+                    <label>Registro EMBRATUR <span>*</span></label>
+                    <div class="input-group recontar">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-id-card"></span>
+                        </span>
+                        </div>
+                        <?= Form::text('registro', isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
+                    </div>
+                <?= $errors->first('registro'); ?>
+                </div> 
+                <div class="form-group col-md-6">
+                    <label>Documento do veículo <span>*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <span class="fas fa-folder-open" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <?= Form::file('documentos[veiculo]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'veiculo')) ?>
+                    </div>
+                    <?= $errors->first('documentos.veiculo') ?>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Comprovação de regularidade(EMTU, ARTESP e ANTT)<span>*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <span class="fas fa-folder-open" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <?= Form::file('documentos[regularidade]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'regularidade')) ?>
+                    </div>
+                    <?= $errors->first('documentos.regularidade') ?>
+                </div>      
+            </div>
         </div>
 
         <h4 class="section-title">Dados gerais</h4>
@@ -248,10 +325,100 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('estado', $data['estados'],isset($usuario)? isset($usuario->individuo->endereco->cidade_id)?$data['select']['estado']->id:null :35,array('class'=>'form-control required estado selectpicker','id'=>'estado','aria-required'=>"true", 'multiple'))?>
+                    <?= Form::select('tipovisitante', $data['tiposvisitantes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple'))?>
                 </div>
-            <?= $errors->first('estado'); ?>
+            <?= $errors->first('tipovisitante'); ?>
             </div>
+            <div class="form-group col-md-6">
+                <label>Destino <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('tipodestino', $data['tiposdestinos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple'))?>
+                </div>
+            <?= $errors->first('tipodestino'); ?>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>Nome do local / Endereço <span>*</span></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-map"></span>
+                        </span>
+                    </div>
+                    <?= Form::text('local_destino', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Nome do local / Endereço'))?>
+                </div>
+                <?= $errors->first('local_destino') ?>
+            </div> 
+            
+            <div class="form-group col-md-6">
+                <label>Local para refeições <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('tiporefeicao', $data['tiposrefeicoes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple'))?>
+                </div>
+            <?= $errors->first('tiporefeicao'); ?>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label>Motivo da viagem <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('tipomotivo', $data['tiposmotivos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple'))?>
+                </div>
+            <?= $errors->first('tipomotivo'); ?>
+            </div>
+            
+            <div class="form-group col-md-6">
+                <label>Atrativo principal <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('tipoatrativo', $data['tiposatrativos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple'))?>
+                </div>
+            <?= $errors->first('tipoatrativo'); ?>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Tem roteiro pré-definido? <span>*</span></label>
+                <div class="input-group">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <?= Form::radio('roteiro_predefinido', 1, (isset($viagem) && $viagem->roteiro_predefinido == 1) ? true : false,array('class' => 'custom-control-input', 'id'=>"tipo_roteiro_1")) ?>
+                        <label class="custom-control-label" for="tipo_roteiro_1">Sim</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <?= Form::radio('roteiro_predefinido', 0, (!isset($viagem) || (isset($viagem) && $viagem->roteiro_predefinido == 1)) ? true : false,array('class' => 'custom-control-input', 'id'=>"tipo_roteiro_0")) ?>
+                        <label class="custom-control-label" for="tipo_roteiro_0">Não</label>
+                    </div>
+                </div>
+            <?= $errors->first('roteiro_predefinido'); ?>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Roteiro <span>*</span></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-clipboard-list"></span>
+                        </span>
+                    </div>
+                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Roteiro'))?>
+                </div>
+                <?= $errors->first('roteiro_especificar') ?>
+            </div> 
         </div>      
 
 
