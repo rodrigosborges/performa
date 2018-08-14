@@ -13,7 +13,7 @@ class ViagemController extends \BaseController {
 			'tiposatrativos'	=> MainHelper::fixArray(TipoAtrativo::all(),'id','nome',1),
 			'tiposveiculos'		=> MainHelper::fixArray(TipoVeiculo::all(),'id','nome'),
 			'organizacoes'		=> Organizacao::all(),
-			'url'				=> url("viagem/store"),
+			'url'				=> url("viagem"),
 			'method'			=> 'POST',
 			'id'				=>	null
 		];
@@ -25,6 +25,7 @@ class ViagemController extends \BaseController {
 	}
 
 	public function store(){
+		return Input::all();
 	}
 
 	public function show($id){

@@ -14,6 +14,11 @@ body{
     padding-top: 7px !important;
 }
 
+.button-veiculos{
+    font-size: 25px;
+    padding-top: 0px;
+}
+
 .btn-light:not(:disabled):not(.disabled).active, .btn-light:not(:disabled):not(.disabled):active, .show>.btn-light.dropdown-toggle, .btn-light:hover{
     background-color: white;
 }

@@ -96,11 +96,6 @@
 	<script src="{{ asset('assets/js/bibliotecas/jquery/jquery-ui.js')}}"></script>
 	<script src="{{ asset('assets/js/bibliotecas/bootstrap-select.min.js') }}"></script>
 	<script src="{{ asset('assets/js/bibliotecas/defaults-pt_BR.min.js') }}"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('form#pesquisa').validate()
-		})
-	</script>
 	@yield('js')
 </body>
 </html>

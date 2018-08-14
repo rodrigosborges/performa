@@ -170,8 +170,8 @@ $(document).ready(function(){
   $(".cnpj").mask("99.999.999/9999-99");
   $(".cpf").mask("999.999.999-99");
   $(".cep").mask("99999-999");
-  $(".licitacao").mask("SS/999/9999");
-  $(".processo").mask("99999999-9/9999");
+  $(".placa").mask("AAA-9999");
+  $(".numero").mask("9999")
 
   var SPMaskBehavior = function (val) {
     return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
