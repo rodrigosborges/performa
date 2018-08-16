@@ -9,7 +9,7 @@ class Viagem extends Eloquent{
     protected $table = 'viagens';
 
     protected $fillable = array('numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino', 'anexo',
-        'roteiro_predefinido', 'roteiro_especificar');
+        'roteiro_predefinido', 'roteiro_especificar','sugestao');
 
     public function cidade_origem(){
         return $this->belongsTo('Cidade', 'cidade_origem', 'id');

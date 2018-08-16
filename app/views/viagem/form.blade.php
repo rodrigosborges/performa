@@ -6,16 +6,7 @@
 <div class="card">
     <div class="card-header"><h4>Formulário para solicitar autorização de veículos</h4></div>
     <div class="card-body">
-        <h4 class="section-title">Forma de organização da viagem</h4>
         <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'id' => 'form', 'files' => true));?>
-        <div class="form-group text-center">
-            @foreach($data['organizacoes'] as $key=>$organizacao)
-            <div class="custom-control custom-radio custom-control-inline">
-                <?= Form::radio('organizacao_id', $organizacao->id, (isset($viagem) && $viagem->organizacao_id) || (!isset($viagem)&& $key==0) == $organizacao->id ? true : false,array('class' => 'custom-control-input', 'id'=>"tipo_$organizacao->id")) ?>
-                <label class="custom-control-label" for="tipo_{{$organizacao->id}}">{{$organizacao->nome}}</label>
-            </div>
-            @endforeach
-        </div>
         <h4 class="section-title">Responsável pela organização da viagem</h4>
         <div class="row">
             <div class="form-group col-md-12">
@@ -52,9 +43,9 @@
                             <span class="fas fa-at"></span>
                         </span>
                     </div>
-                    <?= Form::text('contato[email]', isset($viagem)? $viagem->pessoa->contato->email : null, array('class' => 'form-control required', 'placeholder' => 'E-mail'))?>
+                    <?= Form::text('pessoa[contato][email]', isset($viagem)? $viagem->pessoa->contato->email : null, array('class' => 'form-control required', 'placeholder' => 'E-mail'))?>
                 </div>
-                <?= $errors->first('contato.email') ?>
+                <?= $errors->first('pessoa.contato.email') ?>
             </div>
 
             <div class="form-group col-md-6">
@@ -65,9 +56,9 @@
                             <span class="fas fa-phone"></span>
                         </span>
                     </div>
-                    <?= Form::text('contato[telefone]', isset($viagem)? $viagem->pessoa->contato->telefone : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Telefone'))?>
+                    <?= Form::text('pessoa[contato][telefone]', isset($viagem)? $viagem->pessoa->contato->telefone : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Telefone'))?>
                 </div>
-                <?= $errors->first('contato.telefone') ?>
+                <?= $errors->first('pessoa.contato.telefone') ?>
             </div>
 
             <div class="form-group col-md-6">
@@ -78,20 +69,20 @@
                             <span class="fas fa-mobile-alt"></span>
                         </span>
                     </div>
-                    <?= Form::text('contato[celular]', isset($viagem)? $viagem->pessoa->contato->celular : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Celular'))?>
+                    <?= Form::text('pessoa[contato][celular]', isset($viagem)? $viagem->pessoa->contato->celular : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Celular'))?>
                 </div>
-                <?= $errors->first('contato.celular') ?>
+                <?= $errors->first('pessoa.contato.celular') ?>
             </div>
 
             <div class="form-group col-md-12">
-                <label>Documento do solicitante</label>
+                <label>Documento do solicitante <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                             <span class="fas fa-folder-open" aria-hidden="true"></span>
                         </span>
                     </div>
-                    <?= Form::file('documentos[solicitante]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'solicitante')) ?>
+                    <?= Form::file('documentos[solicitante]', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'solicitante')) ?>
                 </div>
                 <?= $errors->first('documentos.solicitante') ?>
             </div>
@@ -169,8 +160,20 @@
 
         </div>
 
-        <h4 class="section-title">Em caso da viagem ser organizada por agência ou empresa de ônibus</h4>
+        <h4 class="section-title">Organização da viagem</h4>
         <div class="row">
+            <div class="col-md-12">
+                <div class="form-group text-center">
+                    @foreach($data['organizacoes'] as $key=>$organizacao)
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <?= Form::radio('organizacao_id', $organizacao->id, (isset($viagem) && $viagem->organizacao_id) || (!isset($viagem)&& $key==0) == $organizacao->id ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_$organizacao->id")) ?>
+                        <label class="custom-control-label" for="tipo_{{$organizacao->id}}">{{$organizacao->nome}}</label>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <div class="row empresa">
             <div class="form-group col-md-12">
                 <label>Nome da empresa <span>*</span></label>
                 <div class="input-group">
@@ -209,29 +212,44 @@
                 <?= $errors->first('empresa.contato.telefone') ?>
             </div>
 
-            <div class="form-group col-md-6">
-                <label>Fax <span></span></label>
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <span class="fas fa-fax"></span>
-                        </span>
-                    </div>
-                    <?= Form::text('empresa[contato][fax]', isset($viagem)? $viagem->empresa->contato->celular : null, array('class' => 'form-control telefone_numero', 'placeholder' => 'Fax'))?>
-                </div>
-                <?= $errors->first('empresa.contato.celular') ?>
-            </div>
-            <div class="form-group col-md-6">
-                <label>Site <span>*</span></label>
+            <div class="form-group col-md-12">
+                <label>Site</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                             <span class="fas fa-desktop"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa[site]', isset($viagem)? $viagem->empresa->site : null, array('class' => 'form-control required', 'placeholder' => 'Site'))?>
+                    <?= Form::text('empresa[site]', isset($viagem)? $viagem->empresa->site : null, array('class' => 'form-control', 'placeholder' => 'Site'))?>
                 </div>
                 <?= $errors->first('empresa.site') ?>
+            </div>
+
+            
+            <div class="form-group col-md-5">
+                <label>Estado <span>*</span></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-map"></span>
+                        </span>
+                    </div>
+                    <?= Form::select('empresa[estado]', $data['estados'],isset($viagem)? isset($viagem->empresa->cidade_id)?$data['select']['estado']->id:null :35,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
+                </div>
+                <?= $errors->first('empresa[estado]'); ?>
+            </div>
+
+            <div class="form-group col-md-7">
+                <label>Cidade <span>*</span></label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-map-marker-alt"></span>
+                        </span>
+                    </div>
+                    <?= Form::select('empresa[cidade_id]', $data['cidades'],isset($viagem)? isset($viagem->empresa->endereco->cidade_id)?$data['select']['cidade']->id :null :3388,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>
+                </div>
+                <?= $errors->first('empresa[cidade_id]'); ?>
             </div>
         </div>
 
@@ -245,7 +263,7 @@
                             <span class="fas fa-building"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa_veiculo', isset($viagem)? $viagem->empresa->empresa_veiculo : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa do veículo'))?>
+                    <?= Form::text('empresa_veiculo', isset($viagem)? $viagem->empresa_veiculo : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa do veículo'))?>
                 </div>
                 <?= $errors->first('empresa_veiculo') ?>
             </div> 
@@ -298,7 +316,7 @@
                                     <span class="fas fa-folder-open" aria-hidden="true"></span>
                                 </span>
                             </div>
-                            <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'veiculo')) ?>
+                            <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'veiculo')) ?>
                         </div>
                         <?= $errors->first('documentos.veiculo') ?>
                     </div>
@@ -310,7 +328,7 @@
                                     <span class="fas fa-folder-open" aria-hidden="true"></span>
                                 </span>
                             </div>
-                            <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'regularidade')) ?>
+                            <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'regularidade')) ?>
                         </div>
                         <?= $errors->first('documentos.regularidade') ?>
                     </div>      
@@ -326,6 +344,32 @@
         <h4 class="section-title">Dados gerais</h4>
         <div class="row">
             <div class="form-group col-md-6">
+                <label>Primeira vez no município? <span>*</span></label>
+                <div class="input-group">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <?= Form::radio('primeira_vez', 1, (!isset($viagem) || (isset($viagem) && $viagem->primeira_vez == 1)) ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_primeiravez_1")) ?>
+                        <label class="custom-control-label" for="tipo_primeiravez_1">Sim</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <?= Form::radio('primeira_vez', 0, (isset($viagem) && $viagem->primeira_vez == 1) ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_primeiravez_0")) ?>
+                        <label class="custom-control-label" for="tipo_primeiravez_0">Não</label>
+                    </div>
+                </div>
+            <?= $errors->first('primeira_vez'); ?>
+            </div>
+            <div class="form-group col-md-6 primeira_vez" style="display:none">
+                <label>Quantas vezes já esteve no município <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('quantidade_vezes_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true"))?>
+                </div>
+            <?= $errors->first('quantidade_vezes_id'); ?>
+            </div>
+            <div class="form-group col-md-6">
                 <label>Perfil do visitante <span>*</span></label>
                 <div class="input-group recontar">
                     <div class="input-group-prepend">
@@ -333,7 +377,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('tipovisitante[]', $data['tiposvisitantes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'onChange' => "especificar('tipovisitante[]', ".array_search('Outros',$data['tiposvisitantes']).", 'especificar_visitante')"))?>
+                    <?= Form::select('tipovisitante[]', $data['tiposvisitantes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true",'multiple', 'data-selected-text-format' =>"count", 'onChange' => "especificar('tipovisitante[]', ".array_search('Outros',$data['tiposvisitantes']).", 'especificar_visitante')"))?>
                 </div>
             <?= $errors->first('tipovisitante'); ?>
             </div>
@@ -359,7 +403,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('tipodestino[]', $data['tiposdestinos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'onChange' => "especificar('tipodestino[]', ".array_search('Outros',$data['tiposdestinos']).", 'especificar_destino')"))?>
+                    <?= Form::select('tipodestino[]', $data['tiposdestinos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'data-selected-text-format' =>"count", 'onChange' => "especificar('tipodestino[]', ".array_search('Outros',$data['tiposdestinos']).", 'especificar_destino')"))?>
                 </div>
             <?= $errors->first('tipodestino'); ?>
             </div>
@@ -398,7 +442,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('tiporefeicao[]', $data['tiposrefeicoes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'onChange' => "especificar('tiporefeicao[]', ".array_search('Outros',$data['tiposrefeicoes']).", 'especificar_refeicao')"))?>
+                    <?= Form::select('tiporefeicao[]', $data['tiposrefeicoes'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'data-selected-text-format' =>"count", 'onChange' => "especificar('tiporefeicao[]', ".array_search('Outros',$data['tiposrefeicoes']).", 'especificar_refeicao')"))?>
                 </div>
             <?= $errors->first('tiporefeicao'); ?>
             </div>
@@ -425,7 +469,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('tipomotivo[]', $data['tiposmotivos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'onChange' => "especificar('tipomotivo[]', ".array_search('Outros',$data['tiposmotivos']).", 'especificar_motivo')"))?>
+                    <?= Form::select('tipomotivo[]', $data['tiposmotivos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'data-selected-text-format' =>"count", 'onChange' => "especificar('tipomotivo[]', ".array_search('Outros',$data['tiposmotivos']).", 'especificar_motivo')"))?>
                 </div>
             <?= $errors->first('tipomotivo'); ?>
             </div>
@@ -451,7 +495,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('tipoatrativo[]', $data['tiposatrativos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'onChange' => "especificar('tipoatrativo[]', ".array_search('Outros',$data['tiposatrativos']).", 'especificar_atrativo')"))?>
+                    <?= Form::select('tipoatrativo[]', $data['tiposatrativos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required selectpicker','aria-required'=>"true", 'multiple', 'data-selected-text-format' =>"count", 'onChange' => "especificar('tipoatrativo[]', ".array_search('Outros',$data['tiposatrativos']).", 'especificar_atrativo')"))?>
                 </div>
             <?= $errors->first('tipoatrativo'); ?>
             </div>
@@ -473,11 +517,11 @@
                 <label>Tem roteiro pré-definido? <span>*</span></label>
                 <div class="input-group">
                     <div class="custom-control custom-radio custom-control-inline">
-                        <?= Form::radio('roteiro_predefinido', 1, (isset($viagem) && $viagem->roteiro_predefinido == 1) ? true : false,array('class' => 'custom-control-input', 'id'=>"tipo_roteiro_1")) ?>
+                        <?= Form::radio('roteiro_predefinido', 1, (isset($viagem) && $viagem->roteiro_predefinido == 1) ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_roteiro_1")) ?>
                         <label class="custom-control-label" for="tipo_roteiro_1">Sim</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                        <?= Form::radio('roteiro_predefinido', 0, (!isset($viagem) || (isset($viagem) && $viagem->roteiro_predefinido == 1)) ? true : false,array('class' => 'custom-control-input', 'id'=>"tipo_roteiro_0")) ?>
+                        <?= Form::radio('roteiro_predefinido', 0, (!isset($viagem) || (isset($viagem) && $viagem->roteiro_predefinido == 1)) ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_roteiro_0")) ?>
                         <label class="custom-control-label" for="tipo_roteiro_0">Não</label>
                     </div>
                 </div>
@@ -491,11 +535,25 @@
                             <span class="fas fa-clipboard-list"></span>
                         </span>
                     </div>
-                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Roteiro'))?>
+                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control', 'placeholder' => 'Roteiro'))?>
                 </div>
                 <?= $errors->first('roteiro_especificar') ?>
             </div> 
-        </div>      
+        </div>     
+        <h4 class="section-title">Sugestões e reclamações</h4>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-align-justify"></span>
+                        </span>
+                    </div>
+                    <?= Form::textarea('sugestao', isset($viagem)? $viagem->sugestao : null, array('class' => 'form-control', 'placeholder' => 'Digite aqui suas reclamações e sugestões', 'rows' => 5))?>
+                </div>
+                <?= $errors->first('sugestao') ?>
+            </div>
+        </div>          
 
 
         <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block'));?>
@@ -507,4 +565,5 @@
 
 @section('js')
     <script type="text/javascript" src="{{asset('assets/js/views/viagem.js')}}"></script>
+    <!-- <script type="text/javascript" src="{{asset('assets/js/validacao/viagemValidator.js')}}"></script> -->
 @stop

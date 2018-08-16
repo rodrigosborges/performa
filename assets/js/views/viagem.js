@@ -35,4 +35,28 @@ $(document).ready(function(){
         }
     })
 
+    $("input[name=primeira_vez]").on('change',function(){
+        if($(this).val() == 0){
+            $(".primeira_vez").show()
+            $(".primeira_vez").find("select").addClass("required")
+        }else{
+            $(".primeira_vez").hide()
+            $(".primeira_vez").find("select").removeClass("required")
+        }
+    })
+
+    $("input[name=organizacao_id]").on('change',function(){
+        if($(this).val() == 1){
+            $(".empresa").show()
+            $(".empresa").find("input:text, select").not("input[name='empresa[site]']").addClass("required")
+        }else{
+            $(".empresa").hide()
+            $(".empresa").find("input:text, select").removeClass("required")
+        }
+    })
+
+    $(document).on('change', 'input[name="estado"]', function() {
+        findElements($('input[name="estado"]').val(), cidade, 'Estado', 'cidades', 3388)
+    });
+
 })

@@ -155,8 +155,13 @@ jQuery.validator.addMethod("files_size", function (value, element, size) {
   return (this.optional(element) || total <= size*1024);
 }, "Os arquivos não devem ultrapassar 5MB");  // Mensagem padrão
 
+
+jQuery.validator.addMethod("placa", function (value, element) {
+  return this.optional(element) || /[a-zA-Z]{3}-[0-9]{4}/.test(value);
+}, "Insira uma placa de veículo válida");
+
 jQuery.validator.addMethod("telefone", function (value, element) {
-  return this.optional(element) || /\([0-9]{2}\) [0-9]{4}-[0-9]{4}/.test(value);
+  return this.optional(element) || /\([0-9]{2}\) [0-9]{4}-[0-9]{4}/.test(value) || /\([0-9]{2}\) [0-9]{5}-[0-9]{4}/.test(value);
 }, "Insira um telefone válido");
 
 jQuery.validator.addMethod("celular", function (value, element) {

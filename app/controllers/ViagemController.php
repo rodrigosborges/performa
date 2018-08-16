@@ -4,14 +4,15 @@ class ViagemController extends \BaseController {
 
 	public function index(){
 		$data = [
-			'estados'			=> MainHelper::fixArray(Estado::all(), 'id','nome'),
-			'cidades'			=> MainHelper::fixArray(Cidade::where('estado_id','1')->get(),'id','nome'),
+			'estados'			=> MainHelper::fixArray(Estado::orderBy('nome')->get(), 'id','nome'),
+			'cidades'			=> MainHelper::fixArray(Cidade::where('estado_id','35')->orderBy('nome')->get(),'id','nome'),
 			'tiposvisitantes'	=> MainHelper::fixArray(TipoVisitante::all(),'id','nome',1),
 			'tiposdestinos'		=> MainHelper::fixArray(TipoDestino::all(),'id','nome',1),
 			'tiposrefeicoes'	=> MainHelper::fixArray(TipoRefeicao::all(),'id','nome',1),
 			'tiposmotivos'		=> MainHelper::fixArray(TipoMotivo::all(),'id','nome',1),
 			'tiposatrativos'	=> MainHelper::fixArray(TipoAtrativo::all(),'id','nome',1),
 			'tiposveiculos'		=> MainHelper::fixArray(TipoVeiculo::all(),'id','nome'),
+			'quantidadesvezes'	=> MainHelper::fixArray(QuantidadeVez::all(),'id','nome'),
 			'organizacoes'		=> Organizacao::all(),
 			'url'				=> url("viagem"),
 			'method'			=> 'POST',
@@ -25,7 +26,11 @@ class ViagemController extends \BaseController {
 	}
 
 	public function store(){
-		return Input::all();
+		$dados = Input::all();
+		return $dados;
+		$viagem = new Viagem;
+		$viagem->fill($dados);
+		return $dados;
 	}
 
 	public function show($id){
