@@ -6,6 +6,7 @@
 <div class="card">
     <div class="card-header"><h4>Formulário para solicitar autorização de veículos</h4></div>
     <div class="card-body">
+        <h5>ATENÇÃO! A SOLICITAÇÃO DEVE SER APRESENTADA COM, NO MÍNIMO, 10 DIAS ÚTEIS DE ANTECEDÊNCIA, A CONTAR DA DATA DA VIAGEM, SOB PENA DE INDEFERIMENTO.</h5>
         <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'id' => 'form', 'files' => true));?>
         <h4 class="section-title">Responsável pela organização da viagem</h4>
         <div class="row">
@@ -280,9 +281,9 @@
                                 <span class="fas fa-list"></span>
                             </span>
                             </div>
-                            <?= Form::select('tipoveiculo[]', $data['tiposveiculos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
+                            <?= Form::select('tipo_veiculo_id[]', $data['tiposveiculos'],isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
                         </div>
-                    <?= $errors->first('tipoveiculo'); ?>
+                    <?= $errors->first('tipo_veiculo_id'); ?>
                     </div>  
                     <div class="form-group col-md-4">
                         <label>Placa do veículo <span>*</span></label>
@@ -365,9 +366,9 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('quantidade_vezes_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true"))?>
+                    <?= Form::select('quantidade_vez_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true"))?>
                 </div>
-            <?= $errors->first('quantidade_vezes_id'); ?>
+            <?= $errors->first('quantidade_vez_id'); ?>
             </div>
             <div class="form-group col-md-6">
                 <label>Perfil do visitante <span>*</span></label>
@@ -433,6 +434,19 @@
                 </div>
                 <?= $errors->first('local_destino') ?>
             </div> 
+
+            <div class="form-group col-md-6">
+                <label>Bairro <span>*</span></label>
+                <div class="input-group recontar">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-list"></span>
+                    </span>
+                    </div>
+                    <?= Form::select('bairro_id', $data['bairros'],isset($viagem) ? $viagem : null,array('class'=>'form-control required','aria-required'=>"true" ))?>
+                </div>
+            <?= $errors->first('bairro_id'); ?>
+            </div>  
             
             <div class="form-group col-md-6">
                 <label>Local para refeições <span>*</span></label>
@@ -565,5 +579,5 @@
 
 @section('js')
     <script type="text/javascript" src="{{asset('assets/js/views/viagem.js')}}"></script>
-    <!-- <script type="text/javascript" src="{{asset('assets/js/validacao/viagemValidator.js')}}"></script> -->
+    <script type="text/javascript" src="{{asset('assets/js/validacao/viagemValidator.js')}}"></script>
 @stop

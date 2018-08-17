@@ -28,7 +28,7 @@
 			<ul class="navbar-nav mr-auto">
 				
 				<li class="nav-item">
-					<a href="{{url('usuario/create')}}" class="nav-link">Cadastrar</a>
+					<a href="{{url('viagem')}}" class="nav-link">Cadastrar</a>
 				</li>
 				
 			</ul>

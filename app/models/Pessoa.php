@@ -19,4 +19,12 @@ class Pessoa extends Eloquent{
     public function viagens(){
         return $this->hasMany('Viagem', 'pessoa_id', 'id');
     }
+
+    public function getCpfAttribute(){
+	    return FormatterHelper::setCPF($this->attributes['cpf']);
+    }
+    
+    public function setCpfAttribute($cpf){
+		$this->attributes['cpf'] = FormatterHelper::somenteNumeros($cpf);
+	}  
 }

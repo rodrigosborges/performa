@@ -55,8 +55,12 @@ $(document).ready(function(){
         }
     })
 
-    $(document).on('change', 'input[name="estado"]', function() {
-        findElements($('input[name="estado"]').val(), cidade, 'Estado', 'cidades', 3388)
+    $(document).on('change', 'select[name="estado"]', function() {
+        findElements($('select[name="estado"]').val(), $('select[name="cidade_origem"]'), 'Estado', 'cidades', 3388)
+    });
+
+    $(document).on('change', 'select[name="empresa[estado]"]', function() {
+        findElements($('select[name="empresa[estado]"]').val(), $('select[name="empresa[cidade_id]"]'), 'Estado', 'cidades', 3388)
     });
 
 })

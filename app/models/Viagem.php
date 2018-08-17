@@ -8,8 +8,8 @@
 class Viagem extends Eloquent{
     protected $table = 'viagens';
 
-    protected $fillable = array('numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino', 'anexo',
-        'roteiro_predefinido', 'roteiro_especificar','sugestao');
+    protected $fillable = array('cidade_origem','bairro_id','numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino', 'anexo',
+        'roteiro_predefinido', 'roteiro_especificar','sugestao','organizacao_id', 'destino_id','quantidade_vez_id', 'empresa_veiculo');
 
     public function cidade_origem(){
         return $this->belongsTo('Cidade', 'cidade_origem', 'id');
@@ -36,7 +36,7 @@ class Viagem extends Eloquent{
     }
 
     public function quantidadeVez(){
-        return $this->belongsTo('QuantidadeVez', 'quantidade_vezes_id', 'id');
+        return $this->belongsTo('QuantidadeVez', 'quantidade_vez_id', 'id');
     }
 
     public function veiculos(){
@@ -44,18 +44,38 @@ class Viagem extends Eloquent{
     }
 
     public function tiposAtrativos(){
-        return $this->belongsToMany('TipoAtrativo', 'viagens_atrativos', 'viagens_id', 'tipos_atrativos_id');
+        return $this->belongsToMany('TipoAtrativo', 'viagens_atrativos', 'viagem_id', 'tipo_atrativo_id');
     }
 
     public function tiposMotivos(){
-        return $this->belongsToMany('TipoMotivo', 'viagens_motivos', 'viagens_id', 'tipos_motivos_id');
+        return $this->belongsToMany('TipoMotivo', 'viagens_motivos', 'viagem_id', 'tipo_motivo_id');
     }
 
     public function tiposRefeicoes(){
-        return $this->belongsToMany('TipoRefeicao', 'viagens_refeicoes', 'viagens_id', 'tipos_refeicoes_id');
+        return $this->belongsToMany('TipoRefeicao', 'viagens_refeicoes', 'viagem_id', 'tipo_refeicao_id');
     }
 
     public function tiposVisitantes(){
-        return $this->belongsToMany('TipoVisitante', 'viagens_visitantes', 'viagens_id', 'tipos_visitantes_id');
+        return $this->belongsToMany('TipoVisitante', 'viagens_visitantes', 'viagem_id', 'tipo_visitante_id');
+    }
+
+    public function tiposDestinos(){
+        return $this->belongsToMany('TipoDestino', 'viagens_destinos', 'viagem_id', 'tipo_destino_id');
+    }
+
+    public function setChegadaAttribute($chegada){
+        $this->attributes['chegada'] = FormatterHelper::brToEnDate($chegada);
+    }
+    
+    public function getChegadaAttribute(){
+        return FormatterHelper::enToBrDate($this->attributes['chegada']);
+    }
+
+    public function setSaidaAttribute($saida){
+        $this->attributes['saida'] = FormatterHelper::brToEnDate($saida);
+    }
+    
+    public function getSaidaAttribute(){
+        return FormatterHelper::enToBrDate($this->attributes['saida']);
     }
 }

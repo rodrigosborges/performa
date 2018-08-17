@@ -10,7 +10,7 @@ class Empresa extends Eloquent{
 
     public $timestamps = false;
 
-    protected $fillable = array('nome', 'site');
+    protected $fillable = array('nome', 'site','cidade_id');
 
     public function cidade(){
         return $this->belongsTo('Cidade', 'cidade_id', 'id');
