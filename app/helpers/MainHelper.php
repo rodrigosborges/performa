@@ -236,5 +236,11 @@ class mainHelper{
 		$pagination = $pagination->make($items, $count, $perPage);
 		return $pagination;
 	}
+
+	public static function manyToMany($model,$array, $especificar){
+		foreach($array as $var){
+			$model->attach([$var => ['especificar' => $especificar]]);
+		}
+	}
 }
 ?>

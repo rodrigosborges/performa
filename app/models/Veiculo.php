@@ -10,7 +10,7 @@ class Veiculo extends Eloquent{
 
     public $timestamps = false;
 
-    protected $fillable = array('placa', 'registro');
+    protected $fillable = array('placa', 'registro','anexo');
 
     public function tipo(){
         return $this->belongsTo('TipoVeiculo', 'tipo_veiculo_id', 'id');

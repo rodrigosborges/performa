@@ -10,7 +10,7 @@ class Pessoa extends Eloquent{
 
     public $timestamps = false;
 
-    protected $fillable = array('nome', 'cpf');
+    protected $fillable = array('nome', 'cpf', 'anexo');
 
     public function contato(){
         return $this->belongsTo('Contato', 'contato_id', 'id');

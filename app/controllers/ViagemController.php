@@ -27,10 +27,28 @@ class ViagemController extends \BaseController {
 	}
 
 	public function store(){
-		$dados = Input::all();
+		try{
+			
+			$dados = Input::all();
+			$dados['pessoa']['cpf'] = FormatterHelper::somenteNumeros($dados['pessoa']['cpf']);
+			
+			#troca os campos com valores "" por null
+			$dados = array_map(function($dado){ 
+				if($dado == "")
+				return null;
+				else
+				return $dado;
+			}
+			,$dados);
+			
+			$viagem = new Viagem($dados);
+			
+			$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
+			move_uploaded_file($_FILES['documentos']['tmp_name']['solicitante'],
+			 base_path()."/pessoas"."/".$dados['pessoa']['cpf'].".".$ext);
 
-		// try{
-			$pessoa = Pessoa::where('cpf',FormatterHelper::somenteNumeros($dados['pessoa']['cpf']));
+			#create ou update de pessoa conforme o cpf
+			$pessoa = Pessoa::where('cpf',$dados['pessoa']['cpf'])->first();
 			if(!$pessoa){
 				$contato_pessoa = Contato::create($dados['pessoa']['contato']);
 				$pessoa = new Pessoa($dados['pessoa']);
@@ -38,22 +56,28 @@ class ViagemController extends \BaseController {
 			}else{
 				$pessoa->update($dados['pessoa']);
 				$pessoa->contato()->update($dados['pessoa']['contato']);
-			}
-			
+			} 
+			$viagem->pessoa()->associate($pessoa);
+
+
+			#cadastra a empresa caso a viagem seja organizada por uma
 			if($dados['organizacao_id'] == 1){
 				$contato_empresa = Contato::create($dados['empresa']['contato']);
 				$empresa = new Empresa($dados['empresa']);
 				$empresa->contato()->associate($contato_empresa)->save();
+				$viagem->empresa()->associate($empresa);
 			}
-			
-			$viagem = new Viagem($dados);
-			$viagem->empresa()->associate($empresa)->pessoa()->associate($pessoa)->save();
-			$viagem->tiposAtrativos()->sync($dados['tipoatrativo']);
-			$viagem->tiposMotivos()->sync($dados['tipomotivo']);
-			$viagem->tiposRefeicoes()->sync($dados['tiporefeicao']);
-			$viagem->tiposVisitantes()->sync($dados['tipovisitante']);
-			$viagem->tiposDestinos()->sync($dados['tipodestino']);
 
+			$viagem->save();
+			
+			#salva os relacionamentos many to many da viagem
+			MainHelper::manyToMany($viagem->tiposAtrativos(), $dados['tipoatrativo'], $dados['especificar_atrativo']);
+			MainHelper::manyToMany($viagem->tiposMotivos(), $dados['tipomotivo'], $dados['especificar_motivo']);
+			MainHelper::manyToMany($viagem->tiposRefeicoes(), $dados['tiporefeicao'], $dados['especificar_refeicao']);
+			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], $dados['especificar_visitante']);
+			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], $dados['especificar_destino']);
+
+			#salva os veículos cadastrados para a viagem
 			foreach($dados['tipo_veiculo_id'] as $key=>$veiculo){
 				$veiculo = new Veiculo;
 				$veiculo->placa = $dados['placa'][$key];
@@ -61,10 +85,10 @@ class ViagemController extends \BaseController {
 				$veiculo->tipo_veiculo_id = $dados['tipo_veiculo_id'][$key];
 				$viagem->veiculos()->save($veiculo);
 			}
-		// }catch(Exception $e){
-		// 	return $e->getMessage();
-		// }
-
+		
+		}catch(Exception $e){
+			return $e->getMessage();
+		}
 
 		return $dados;
 	}
@@ -80,6 +104,5 @@ class ViagemController extends \BaseController {
 
 	public function destroy($id){
 	}
-
 
 }
