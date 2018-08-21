@@ -270,6 +270,18 @@
             </div> 
         </div>
         <hr>
+        <table class="table table-bordered" id="veiculotable">
+            <thead>
+                <th>Tipo do veículo</th>
+                <th>Placa do veículo</th>
+                <th>Registro EMBRATUR</th>
+                <th>Excluir</th>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+        <hr>
         <div id="veiculo">
             <div class="veiculo">
                 <div class="row">
@@ -366,7 +378,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('quantidade_vez_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true"))?>
+                    <?= Form::select('quantidade_vez_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true", 'disabled'))?>
                 </div>
             <?= $errors->first('quantidade_vez_id'); ?>
             </div>
@@ -549,7 +561,7 @@
                             <span class="fas fa-clipboard-list"></span>
                         </span>
                     </div>
-                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control', 'placeholder' => 'Roteiro'))?>
+                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control', 'placeholder' => 'Roteiro', 'disabled'))?>
                 </div>
                 <?= $errors->first('roteiro_especificar') ?>
             </div> 

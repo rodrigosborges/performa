@@ -27,6 +27,7 @@ class ViagemController extends \BaseController {
 	}
 
 	public function store(){
+		DB::beginTransaction();
 		try{
 			
 			$dados = Input::all();
@@ -43,15 +44,23 @@ class ViagemController extends \BaseController {
 			
 			$viagem = new Viagem($dados);
 			
+			#cria arquivo do documento do solicitante
 			$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
+			$file = base_path()."/pessoas"."/".$dados['pessoa']['cpf'].".".$ext;
 			move_uploaded_file($_FILES['documentos']['tmp_name']['solicitante'],
-			 base_path()."/pessoas"."/".$dados['pessoa']['cpf'].".".$ext);
+			 $file);
+			$zip = new ZipArchive;
+			$zip->open(base_path().'/'.'pessoas/'.$dados['pessoa']['cpf'].'.zip', ZipArchive::CREATE);
+			$zip->addFile($file, $dados['pessoa']['cpf'].".".$ext);
+			$zip->close();
+			unlink($file);
 
 			#create ou update de pessoa conforme o cpf
 			$pessoa = Pessoa::where('cpf',$dados['pessoa']['cpf'])->first();
 			if(!$pessoa){
 				$contato_pessoa = Contato::create($dados['pessoa']['contato']);
 				$pessoa = new Pessoa($dados['pessoa']);
+				$pessoa->anexo = $dados['pessoa']['cpf'].".".$ext;
 				$pessoa->contato()->associate($contato_pessoa)->save();
 			}else{
 				$pessoa->update($dados['pessoa']);
@@ -71,11 +80,11 @@ class ViagemController extends \BaseController {
 			$viagem->save();
 			
 			#salva os relacionamentos many to many da viagem
-			MainHelper::manyToMany($viagem->tiposAtrativos(), $dados['tipoatrativo'], $dados['especificar_atrativo']);
-			MainHelper::manyToMany($viagem->tiposMotivos(), $dados['tipomotivo'], $dados['especificar_motivo']);
-			MainHelper::manyToMany($viagem->tiposRefeicoes(), $dados['tiporefeicao'], $dados['especificar_refeicao']);
-			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], $dados['especificar_visitante']);
-			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], $dados['especificar_destino']);
+			MainHelper::manyToMany($viagem->tiposAtrativos(), $dados['tipoatrativo'], @$dados['especificar_atrativo']);
+			MainHelper::manyToMany($viagem->tiposMotivos(), $dados['tipomotivo'], @$dados['especificar_motivo']);
+			MainHelper::manyToMany($viagem->tiposRefeicoes(), $dados['tiporefeicao'], @$dados['especificar_refeicao']);
+			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], @$dados['especificar_visitante']);
+			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], @$dados['especificar_destino']);
 
 			#salva os veículos cadastrados para a viagem
 			foreach($dados['tipo_veiculo_id'] as $key=>$veiculo){
@@ -84,11 +93,40 @@ class ViagemController extends \BaseController {
 				$veiculo->registro = $dados['registro'][$key];
 				$veiculo->tipo_veiculo_id = $dados['tipo_veiculo_id'][$key];
 				$viagem->veiculos()->save($veiculo);
+
+				#armazenas os arquivos dos veículos
+
+				#veiculo
+				$zip = new ZipArchive;
+				$zip->open(base_path().'/'.'veiculos/'.$veiculo->placa.'.zip', ZipArchive::CREATE);
+
+				$ext1 = pathinfo($_FILES['documentos']['name']['veiculo'][$key])['extension'];
+				$file1 = base_path()."/veiculos/veiculo.".$ext1;
+				move_uploaded_file($_FILES['documentos']['tmp_name']['veiculo'][$key],
+				 $file1);
+
+				$zip->addFile($file1, "veiculo.".$ext1);
+
+				#regularidade
+
+				$ext2 = pathinfo($_FILES['documentos']['name']['regularidade'][$key])['extension'];
+				$file2 = base_path()."/veiculos/regularidade.".$ext2;
+				move_uploaded_file($_FILES['documentos']['tmp_name']['regularidade'][$key],
+				 $file2);
+				$zip->addFile($file2, "regularidade.".$ext2);
+				
+				$zip->close();
+
+				unlink($file1);
+				unlink($file2);
+
+				
 			}
-		
 		}catch(Exception $e){
+			DB::rollback();
 			return $e->getMessage();
 		}
+		DB::commit();
 
 		return $dados;
 	}
