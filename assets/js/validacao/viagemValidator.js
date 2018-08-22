@@ -32,19 +32,9 @@ $(document).ready(function(){
 			"empresa[contato][telefone]": {
 				telefone:true,
 			},
-			"placa[]": {
-				placa: true,
-			},
 			"documentos[solicitante]": {
 				multiple_extensions: 'jpg|jpeg|png|pdf',
-			},
-			"documentos[veiculo][]": {
-				multiple_extensions: 'jpg|jpeg|png|pdf',
-			},
-			"documentos[regularidade][]": {
-				multiple_extensions: 'jpg|jpeg|png|pdf',
 			}
-
 		},
 		messages:{}
 	})

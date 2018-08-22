@@ -27,22 +27,26 @@ class ViagemController extends \BaseController {
 	}
 
 	public function store(){
+		$dados = Input::all();
+		$dados['pessoa']['cpf'] = FormatterHelper::somenteNumeros($dados['pessoa']['cpf']);	
+		$validator = Validator::make($dados, ViagemValidator::rules(null, $dados));
+		if($validator->fails()){
+			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
+			return Redirect::back()->withInput()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
+		}
+
 		DB::beginTransaction();
 		try{
-			
-			$dados = Input::all();
-			$dados['pessoa']['cpf'] = FormatterHelper::somenteNumeros($dados['pessoa']['cpf']);
-			
 			#troca os campos com valores "" por null
 			$dados = array_map(function($dado){ 
 				if($dado == "")
-				return null;
+					return null;
 				else
-				return $dado;
-			}
-			,$dados);
+					return $dado;
+			},$dados);
 			
 			$viagem = new Viagem($dados);
+			$viagem->hash = Hash::make(123);
 			
 			#cria arquivo do documento do solicitante
 			$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
@@ -86,49 +90,13 @@ class ViagemController extends \BaseController {
 			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], @$dados['especificar_visitante']);
 			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], @$dados['especificar_destino']);
 
-			#salva os veículos cadastrados para a viagem
-			foreach($dados['tipo_veiculo_id'] as $key=>$veiculo){
-				$veiculo = new Veiculo;
-				$veiculo->placa = $dados['placa'][$key];
-				$veiculo->registro = $dados['registro'][$key];
-				$veiculo->tipo_veiculo_id = $dados['tipo_veiculo_id'][$key];
-				$viagem->veiculos()->save($veiculo);
-
-				#armazenas os arquivos dos veículos
-
-				#veiculo
-				$zip = new ZipArchive;
-				$zip->open(base_path().'/'.'veiculos/'.$veiculo->placa.'.zip', ZipArchive::CREATE);
-
-				$ext1 = pathinfo($_FILES['documentos']['name']['veiculo'][$key])['extension'];
-				$file1 = base_path()."/veiculos/veiculo.".$ext1;
-				move_uploaded_file($_FILES['documentos']['tmp_name']['veiculo'][$key],
-				 $file1);
-
-				$zip->addFile($file1, "veiculo.".$ext1);
-
-				#regularidade
-
-				$ext2 = pathinfo($_FILES['documentos']['name']['regularidade'][$key])['extension'];
-				$file2 = base_path()."/veiculos/regularidade.".$ext2;
-				move_uploaded_file($_FILES['documentos']['tmp_name']['regularidade'][$key],
-				 $file2);
-				$zip->addFile($file2, "regularidade.".$ext2);
-				
-				$zip->close();
-
-				unlink($file1);
-				unlink($file2);
-
-				
-			}
 		}catch(Exception $e){
 			DB::rollback();
 			return $e->getMessage();
 		}
 		DB::commit();
 
-		return $dados;
+		return Redirect::to('veiculo?hash='.$viagem->hash)->with('success', "Primeira etapa cadastrada com sucesso.<br>Caso não seja possível efetuar o cadastro de veículos no momento, utilize esse link ".url("veiculo?hash=$viagem->hash"));
 	}
 
 	public function show($id){
