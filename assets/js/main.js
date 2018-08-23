@@ -170,7 +170,7 @@ $(document).ready(function(){
   $(".cnpj").mask("99.999.999/9999-99");
   $(".cpf").mask("999.999.999-99");
   $(".cep").mask("99999-999");
-  $(".placa").mask("AAA-9999");
+  $(".placa").mask("SSS-9999");
   $(".numero").mask("9999")
 
   var SPMaskBehavior = function (val) {

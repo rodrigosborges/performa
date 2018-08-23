@@ -10,8 +10,8 @@ Class VeiculoValidator{
         
         foreach($dados['documentos']['veiculo'] as $key => $dado){
             $rules += [
-                "documentos.veiculo.$key"      => 'mimes:jpeg,jpg,png,pdf | required',
-                "documentos.regularidade.$key" => 'mimes:jpeg,jpg,png,pdf | required',
+                "documentos.veiculo.$key"      => 'required | mimes:jpeg,jpg,png,pdf',
+                "documentos.regularidade.$key" => 'required | mimes:jpeg,jpg,png,pdf',
             ];
         }
         

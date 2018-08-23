@@ -19,12 +19,13 @@
                             <span class="fas fa-building"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa_veiculo', isset($viagem)? $viagem->empresa_veiculo : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa do veículo'))?>
+                    <?= Form::text('empresa_veiculo', null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa do veículo'))?>
                 </div>
                 <?= $errors->first('empresa_veiculo') ?>
             </div> 
         </div>
         <hr>
+        <h5>OS VEÍCULOS NÃO ARMAZENADOS NA TABELA SERÃO DESCONSIDERADOS.</h5>
         <table class="table table-bordered" id="veiculotable">
             <thead>
                 <th>Tipo do veículo</th>
@@ -38,80 +39,86 @@
         </table>
         <hr>
         <div id="veiculo">
-            <div class="veiculo">
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <label>Tipo do veículo <span>*</span></label>
-                        <div class="input-group recontar">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <span class="fas fa-list"></span>
-                            </span>
-                            </div>
-                            <?= Form::select('tipo_veiculo_id[]', $data['tiposveiculos'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true" ))?>
-                        </div>
-                    <?= $errors->first('tipo_veiculo_id'); ?>
-                    </div>  
-                    <div class="form-group col-md-4">
-                        <label>Placa do veículo <span>*</span></label>
-                        <div class="input-group recontar">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <span class="fas fa-car"></span>
-                            </span>
-                            </div>
-                            <?= Form::text('placa[]', isset($viagem) ? $viagem : null,array('class'=>'form-control placa'))?>
-                        </div>
-                    <?= $errors->first('placa'); ?>
-                    </div>   
-                    <div class="form-group col-md-4">
-                        <label>Registro EMBRATUR <span>*</span></label>
-                        <div class="input-group recontar">
-                            <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <span class="fas fa-id-card"></span>
-                            </span>
-                            </div>
-                            <?= Form::text('registro[]', isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true" ))?>
-                        </div>
-                    <?= $errors->first('registro'); ?>
-                    </div> 
-                    <div class="form-group col-md-6">
-                        <label>Documento do veículo <span>*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
+            <?php 
+                $veiculos = isset($viagem) ? $viagem->veiculos : Input::old();
+                $veiculos = empty($veiculos) ? [""] : $veiculos;
+            ?>
+            @foreach($veiculos as $key => $veiculo)
+                <div class="veiculo">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label>Tipo do veículo <span>*</span></label>
+                            <div class="input-group recontar">
+                                <div class="input-group-prepend">
                                 <span class="input-group-text">
-                                    <span class="fas fa-folder-open" aria-hidden="true"></span>
+                                    <span class="fas fa-list"></span>
                                 </span>
+                                </div>
+                                <?= Form::select('tipo_veiculo_id[]', $data['tiposveiculos'], @$veiculo['tipo_veiculo_id'][$key],array('class'=>'form-control','aria-required'=>"true" ))?>
                             </div>
-                            <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'veiculo')) ?>
+                        <?= $errors->first('tipo_veiculo_id.*'); ?>
+                        </div>  
+                        <div class="form-group col-md-4">
+                            <label>Placa do veículo <span>*</span></label>
+                            <div class="input-group recontar">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="fas fa-car"></span>
+                                </span>
+                                </div>
+                                <?= Form::text('placa[]', @$veiculo['placa'][$key],array('class'=>'form-control placa', 'id' => "placa$key"))?>
+                            </div>
+                        <?= $errors->first('placa.*'); ?>
+                        </div>   
+                        <div class="form-group col-md-4">
+                            <label>Registro EMBRATUR <span>*</span></label>
+                            <div class="input-group recontar">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <span class="fas fa-id-card"></span>
+                                </span>
+                                </div>
+                                <?= Form::text('registro[]', @$veiculo['registro'][$key],array('class'=>'form-control','aria-required'=>"true" ))?>
+                            </div>
+                        <?= $errors->first('registro.*'); ?>
+                        </div> 
+                        <div class="form-group col-md-6">
+                            <label>Documento do veículo <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="fas fa-folder-open" aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                                <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'veiculo')) ?>
+                            </div>
+                            <?= $errors->first('documentos.veiculo.*') ?>
                         </div>
-                        <?= $errors->first('documentos.veiculo.*') ?>
+                        <div class="form-group col-md-6">
+                            <label>Comprovação de regularidade(EMTU, ARTESP e ANTT)<span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="fas fa-folder-open" aria-hidden="true"></span>
+                                    </span>
+                                </div>
+                                <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'regularidade')) ?>
+                            </div>
+                            <?= $errors->first('documentos.regularidade.*') ?>
+                        </div>      
                     </div>
-                    <div class="form-group col-md-6">
-                        <label>Comprovação de regularidade(EMTU, ARTESP e ANTT)<span>*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">
-                                    <span class="fas fa-folder-open" aria-hidden="true"></span>
-                                </span>
-                            </div>
-                            <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'regularidade')) ?>
-                        </div>
-                        <?= $errors->first('documentos.regularidade.*') ?>
-                    </div>      
+                    <hr>
                 </div>
-                <hr>
-            </div>
+            @endforeach
         </div>
         <div class="text-center">
-            <button type="button" id="adicionarVeiculo" class="btn btn-success">Armazenar veículo</button>
+            <button type="button" id="adicionarVeiculo" class="btn btn-success armazenarVeiculo">Armazenar veículo</button>
         </div>
         <br>
         
         <?= Form::hidden('hash', Input::get('hash'),array('class'=>'form-control'))?>
 
-        <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block'));?>
+        <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block send-form'));?>
         <?= Form::close() ?>
     </div>
 </div>

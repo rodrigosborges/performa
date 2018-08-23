@@ -187,14 +187,6 @@ jQuery.validator.addMethod("extension", function(value, element, param) {
   return this.optional(element) || value.match(new RegExp(".(" + param + ")$", "i"));
 }, "Por favor coloque arquivo com a extensão válida.");
 
-jQuery.validator.addMethod("clicked", function(value, element) {
-  if($('.buscar_endereco').data('clicked')){
-    return true;
-  }else{
-    return false;
-  }
-}, "Necessário realizar busca de endereço automatica.");
-
 function dateReplace(date, from, to) {
   split = date.split(from);
   return date = split[2] + to + split[1] + to + split[0];
@@ -213,3 +205,11 @@ function verificaExtensao(files, exts){
   }
   return true
 }
+
+jQuery.validator.addMethod("has_multiple", function (value, element, params) {
+  inputs = $("input[name='"+element.name+"'")//input dos arquivos
+  if(!inputs.length) 
+    inputs = $("select[name='"+element.name+"'")
+
+  return (inputs.length > 1);
+}, "É necessário adicionar ao menos um veículo à tabela");  // Mensagem padrão
