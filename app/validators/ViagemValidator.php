@@ -14,20 +14,51 @@ Class ViagemValidator{
             'saida' 		            => 'required | date_format:d/m/Y',
             'organizacao_id'	        => 'required | numeric',
             'primeira_vez'	            => 'required',
+            'quantidade_vez_id' 		=> 'required_if:primeira_vez,0',
             'tipovisitante'	            => 'required | array',
             'tipodestino'	            => 'required | array',
             'tiporefeicao'	            => 'required | array',
             'tipomotivo'	            => 'required | array',
+            'tipoatrativo'	            => 'required | array',
             'local_destino'	            => 'required',
             'bairro_id'	                => 'required',
             'roteiro_predefinido'	    => 'required',
+            'roteiro_especificar' 		=> 'required_if:roteiro_predefinido,1',
             'empresa.nome' 		        => 'required_if:organizacao_id,1',
             'empresa.contato.email'     => 'required_if:organizacao_id,1 | email',
             'empresa.contato.telefone'  => 'required_if:organizacao_id,1',
             'empresa.cidade_id' 		=> 'required_if:organizacao_id,1 | numeric',
             'documentos.solicitante'    => 'required | mimes:jpeg,jpg,png,pdf',  
+            
+            
         ];
-
+        
+        if(isset($dados['tipoatrativo']) && in_array(7,$dados['tipoatrativo'])){
+            $rules += [
+                'especificar_atrativo' => 'required'
+            ];
+        }
+        if(isset($dados['tipodestino']) && in_array(5,$dados['tipodestino'])){
+            $rules += [
+                'especificar_destino'   => 'required',
+            ];
+        }
+        if(isset($dados['tipomotivo']) && in_array(5,$dados['tipomotivo'])){
+            $rules += [
+                'especificar_motivo'    => 'required',
+            ];
+        }
+        if(isset($dados['tiporefeicao']) && in_array(6,$dados['tiporefeicao'])){
+            $rules += [
+                'especificar_refeicao'  => 'required',
+            ];
+        }
+        if(isset($dados['tipovisitante']) && in_array(6,$dados['tipovisitante'])){
+            $rules += [
+                'especificar_visitante' => 'required',
+            ];
+        }
+            
         return $rules;
     }
 

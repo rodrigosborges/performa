@@ -18,6 +18,10 @@ class VeiculoController extends BaseController{
 
     public function store(){
         $viagem = Viagem::where('hash',Input::get('hash'))->first();
+
+        if(!empty($viagem->veiculos))
+            return Redirect::to('viagem')->with('error','Formulário não disponível');
+            
         $dados = Input::all();
         $validator = Validator::make($dados, VeiculoValidator::rules(null, $dados));
 		if($validator->fails()){
@@ -25,9 +29,6 @@ class VeiculoController extends BaseController{
 			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
 			return Redirect::back()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
         }
-
-        if(!empty($viagem->veiculos))
-            return Redirect::to('viagem')->with('error','Formulário não disponível');
         
         DB::beginTransaction();
 		try{

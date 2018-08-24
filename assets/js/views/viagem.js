@@ -3,10 +3,10 @@ function especificar(input, outros, target){
     target = $("#"+target)
     if(values.includes(String(outros))){
         target.show()
-        target.find("input").addClass("required")
+        target.find("input").addClass("required").prop('disabled',false)
     }else{
         target.hide()
-        target.find("input").removeClass("required")
+        target.find("input").removeClass("required").prop('disabled',true)
     }
 }
 
@@ -21,7 +21,7 @@ $(document).ready(function(){
             $(".roteiro").find("input").removeClass("required").prop('disabled',true)
         }
     })
-
+    
     $("input[name=primeira_vez]").on('change',function(){
         if($(this).val() == 0){
             $(".primeira_vez").show()
@@ -31,7 +31,7 @@ $(document).ready(function(){
             $(".primeira_vez").find("select").removeClass("required").prop('disabled',true)
         }
     })
-
+    
     $("input[name=organizacao_id]").on('change',function(){
         if($(this).val() == 1){
             $(".empresa").show()
@@ -41,13 +41,12 @@ $(document).ready(function(){
             $(".empresa").find("input:text, select").removeClass("required")
         }
     })
-
+    
     $(document).on('change', 'select[name="estado"]', function() {
         findElements($('select[name="estado"]').val(), $('select[name="cidade_origem"]'), 'Estado', 'cidades', 3388)
     });
-
+    
     $(document).on('change', 'select[name="empresa[estado]"]', function() {
         findElements($('select[name="empresa[estado]"]').val(), $('select[name="empresa[cidade_id]"]'), 'Estado', 'cidades', 3388)
     });
-
 })

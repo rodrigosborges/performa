@@ -174,7 +174,7 @@
                 </div>
             </div>
         </div>
-        <div class="row empresa">
+        <div class="row empresa" style="{{Input::old('organizacao_id')==2?'display:none':''}}">
             <div class="form-group col-md-12">
                 <label>Nome da empresa <span>*</span></label>
                 <div class="input-group">
@@ -270,7 +270,7 @@
                 </div>
             <?= $errors->first('primeira_vez'); ?>
             </div>
-            <div class="form-group col-md-6 primeira_vez" style="display:none">
+            <div class="form-group col-md-6 primeira_vez" style="{{Input::old('quantidade_vez_id')?'':'display:none'}}">
                 <label>Quantas vezes já esteve no município <span>*</span></label>
                 <div class="input-group recontar">
                     <div class="input-group-prepend">
@@ -278,7 +278,7 @@
                         <span class="fas fa-list"></span>
                     </span>
                     </div>
-                    <?= Form::select('quantidade_vez_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true", 'disabled'))?>
+                    <?= Form::select('quantidade_vez_id', $data['quantidadesvezes'],isset($viagem) ? $viagem : null,array('class'=>'form-control','aria-required'=>"true", Input::old('quantidade_vez_id')?'':'disabled'))?>
                 </div>
             <?= $errors->first('quantidade_vez_id'); ?>
             </div>
@@ -295,7 +295,7 @@
             <?= $errors->first('tipovisitante'); ?>
             </div>
             
-            <div class="form-group col-md-6" style="display:none" id="especificar_visitante">
+            <div class="form-group col-md-6" id="especificar_visitante" style="{{Input::old('especificar_visitante')?'':'display:none'}}">
                 <label>Especificar perfil do visitante <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -303,7 +303,7 @@
                             <span class="fas fa-info"></span>
                         </span>
                     </div>
-                    <?= Form::text('especificar_visitante', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar'))?>
+                    <?= Form::text('especificar_visitante', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar', Input::old('especificar_visitante')?'':'disabled'))?>
                 </div>
                 <?= $errors->first('especificar_visitante') ?>
             </div> 
@@ -321,7 +321,7 @@
             <?= $errors->first('tipodestino'); ?>
             </div>
 
-            <div class="form-group col-md-6" style="display:none" id="especificar_destino">
+            <div class="form-group col-md-6" style="{{Input::old('especificar_destino')?'':'display:none'}}" id="especificar_destino" >
                 <label>Especificar destino <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -329,7 +329,7 @@
                             <span class="fas fa-info"></span>
                         </span>
                     </div>
-                    <?= Form::text('especificar_destino', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar'))?>
+                    <?= Form::text('especificar_destino', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar',Input::old('especificar_destino')?'':'disabled'))?>
                 </div>
                 <?= $errors->first('especificar_destino') ?>
             </div> 
@@ -374,7 +374,7 @@
             </div>
 
 
-            <div class="form-group col-md-6" style="display:none" id="especificar_refeicao">
+            <div class="form-group col-md-6" style="{{Input::old('especificar_refeicao')?'':'display:none'}}" id="especificar_refeicao">
                 <label>Especificar local para refeições <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -382,7 +382,7 @@
                             <span class="fas fa-info"></span>
                         </span>
                     </div>
-                    <?= Form::text('especificar_refeicao', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar'))?>
+                    <?= Form::text('especificar_refeicao', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar',Input::old('especificar_refeicao')?'':'disabled'))?>
                 </div>
                 <?= $errors->first('especificar_refeicao') ?>
             </div> 
@@ -400,7 +400,7 @@
             <?= $errors->first('tipomotivo'); ?>
             </div>
 
-            <div class="form-group col-md-6" style="display:none" id="especificar_motivo">
+            <div class="form-group col-md-6" style="{{Input::old('especificar_motivo')?'':'display:none'}}" id="especificar_motivo">
                 <label>Especificar motivo da viagem <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -408,7 +408,7 @@
                             <span class="fas fa-info"></span>
                         </span>
                     </div>
-                    <?= Form::text('especificar_motivo', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar'))?>
+                    <?= Form::text('especificar_motivo', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar',Input::old('especificar_motivo')?'':'disabled'))?>
                 </div>
                 <?= $errors->first('especificar_motivo') ?>
             </div> 
@@ -426,7 +426,7 @@
             <?= $errors->first('tipoatrativo'); ?>
             </div>
 
-            <div class="form-group col-md-6" style="display:none" id="especificar_atrativo">
+            <div class="form-group col-md-6" style="{{Input::old('especificar_atrativo')?'':'display:none'}}" id="especificar_atrativo">
                 <label>Especificar atrativo principal <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -434,7 +434,7 @@
                             <span class="fas fa-info"></span>
                         </span>
                     </div>
-                    <?= Form::text('especificar_atrativo', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar'))?>
+                    <?= Form::text('especificar_atrativo', isset($viagem)? $viagem : null, array('class' => 'form-control required', 'placeholder' => 'Especificar',Input::old('especificar_atrativo')?'':'disabled'))?>
                 </div>
                 <?= $errors->first('especificar_atrativo') ?>
             </div> 
@@ -453,7 +453,7 @@
                 </div>
             <?= $errors->first('roteiro_predefinido'); ?>
             </div>
-            <div class="form-group col-md-6 roteiro" style="display: none">
+            <div class="form-group col-md-6 roteiro" style="{{Input::old('roteiro_especificar')?'':'display:none'}}">
                 <label>Roteiro <span>*</span></label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -461,7 +461,7 @@
                             <span class="fas fa-clipboard-list"></span>
                         </span>
                     </div>
-                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control', 'placeholder' => 'Roteiro', 'disabled'))?>
+                    <?= Form::text('roteiro_especificar', isset($viagem)? $viagem : null, array('class' => 'form-control', 'placeholder' => 'Roteiro', Input::old('roteiro_especificar')?'':'required'))?>
                 </div>
                 <?= $errors->first('roteiro_especificar') ?>
             </div> 

@@ -96,7 +96,7 @@ class ViagemController extends \BaseController {
 		}
 		DB::commit();
 
-		return Redirect::to('veiculo?hash='.$viagem->hash)->with('success', "Primeira etapa cadastrada com sucesso.<br>Caso não seja possível efetuar o cadastro de veículos no momento, utilize esse link ".url("veiculo?hash=$viagem->hash"));
+		return Redirect::to('veiculo?hash='.$viagem->hash)->with('success', "Primeira etapa cadastrada com sucesso.<br>Caso não seja possível efetuar o cadastro de veículos no momento, utilize esse link: <b>".url("veiculo?hash=$viagem->hash")."</b>");
 	}
 
 	public function show($id){
