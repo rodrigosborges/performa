@@ -34,6 +34,7 @@ class ViagemController extends \BaseController {
 			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
 			return Redirect::back()->withInput()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
 		}
+		return Redirect::back()->withInput()->with('success','ae');
 
 		DB::beginTransaction();
 		try{

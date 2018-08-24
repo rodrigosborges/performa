@@ -143,7 +143,7 @@ jQuery.validator.addMethod("multiple_extensions", function (value, element, para
   }
 
   return (this.optional(element) || verificaExtensao(names, params));
-}, "Por favor, coloque arquivos com a extensão válida.");  // Mensagem padrão
+}, "Por favor, coloque arquivos com a extensão válida( {0} ).");  // Mensagem padrão
 
 jQuery.validator.addMethod("files_size", function (value, element, size) {
   files = $("input[name='"+element.name+"']") //input dos arquivos
@@ -173,7 +173,16 @@ jQuery.validator.addMethod("letras", function(value, element) {
 }, "Somente letras");
 
 jQuery.validator.addMethod("minDate", function(value, element, param) {
+  console.log(param)
   var minDate = new Date(dateReplace(param, '/', '-')), valueDate = new Date(dateReplace(value, '/', '-'));
+  return valueDate < minDate ? false : true;
+}, "Data válida somente a partir de {0}");
+
+jQuery.validator.addMethod("minDateCompare", function(value, element, param) {
+  var val = $("input[name="+param+"]").val()
+  if(!val)
+    return false
+  var minDate = new Date(dateReplace(val, '/', '-')), valueDate = new Date(dateReplace(value, '/', '-'));
   return valueDate < minDate ? false : true;
 }, "Data válida somente a partir de {0}");
 
@@ -183,9 +192,9 @@ jQuery.validator.addMethod("regex", function(value, element, regexp) {
 }, "Favor preencher o campo corretamente.");
 
 jQuery.validator.addMethod("extension", function(value, element, param) {
-  param = typeof param === "string" ? param.replace(/,/g, '|') : "png|jpe?g|gif";
+  param = typeof param === "string" ? param.replace(/,/g, '|') : "";
   return this.optional(element) || value.match(new RegExp(".(" + param + ")$", "i"));
-}, "Por favor coloque arquivo com a extensão válida.");
+}, "Por favor coloque arquivo com a extensão válida( {0} ).");
 
 function dateReplace(date, from, to) {
   split = date.split(from);

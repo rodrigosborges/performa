@@ -15,6 +15,16 @@ $(document).ready(function(){
 			"pessoa[cpf]": {
 				verificaCPF: true,
 			},
+			//DATAS
+			"chegada":{
+				validaDataLivre: true,
+				minDate: new Date(Date.now()).addDays(10).toLocaleString().slice(0,10),
+			},
+			"saida":{
+				validaDataLivre: true,
+				minDate: new Date(Date.now()).addDays(10).toLocaleString().slice(0,10),
+				minDateCompare: 'chegada',
+			},
 			// CONTATO
 			"pessoa[contato][email]": {				
 				email: true,
@@ -33,7 +43,7 @@ $(document).ready(function(){
 				telefone:true,
 			},
 			"documentos[solicitante]": {
-				multiple_extensions: 'jpg|jpeg|png|pdf',
+				extension: 'jpg|jpeg|png|pdf',
 			}
 		},
 		messages:{}

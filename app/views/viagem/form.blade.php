@@ -7,7 +7,7 @@
     <div class="card-header"><h4>Formulário para solicitar autorização de veículos</h4></div>
     <div class="card-body">
         <h5>ATENÇÃO! A SOLICITAÇÃO DEVE SER APRESENTADA COM, NO MÍNIMO, 10 DIAS ÚTEIS DE ANTECEDÊNCIA, A CONTAR DA DATA DA VIAGEM, SOB PENA DE INDEFERIMENTO.</h5>
-        <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'id' => 'form', 'files' => true));?>
+        <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'files' => true));?>
         <h4 class="section-title">Responsável pela organização da viagem</h4>
         <div class="row">
             <div class="form-group col-md-12">
