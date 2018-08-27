@@ -19,7 +19,7 @@
 </head>
 <body>
 	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
-		<a class="navbar-brand" href="{{url('/')}}"><i class="fa fa-home"></i> Turismo</a>
+		<a class="navbar-brand" href="{{url(Auth::guest() ? '/viagem' : '/')}}"><i class="fa fa-home"></i> Turismo</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -27,12 +27,14 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				
-				<li class="nav-item">
-					<a href="{{url('viagem')}}" class="nav-link">Cadastrar</a>
-				</li>
+				@if(Auth::check())
+				<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Cadastrar </a></li>
+					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Pendentes <span class="badge badge-secondary">{{Viagem::where('status_id',1)->count();}}</span></a></li>
+					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Aguardando revisão <span class="badge badge-secondary">{{Viagem::where('status_id',2)->count();}}</span></a></li>
+					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Concluídos <span class="badge badge-secondary">{{Viagem::where('status_id',3)->count();}}</span></a></li>			
+				@endif
 				
 			</ul>
-
 			<ul class="navbar-nav float-md-left">
 				@if(Auth::check())
 				<li class="nav-item dropdown">
@@ -46,10 +48,6 @@
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" href="{{url('logout')}}">Sair</a>
 					</div>
-				</li>
-				@else
-				<li class="nav-item">
-					<a class="nav-link" href="{{url('login')}}"><i class="fas fa-sign-in-alt"></i> <b>Acessar</b></a>
 				</li>
 				@endif
 			</ul>
@@ -73,7 +71,7 @@
 	<div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 footer">
 		<small>
 			<p  class="text-center text-light">
-				Desenvolvido por Secretaria de Planejamento e Tecnologia da Informação
+				Desenvolvido por Secretaria de Tecnologia da Informação
 			</p>
 		</small>
 	</div>

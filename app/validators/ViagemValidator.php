@@ -5,7 +5,7 @@ Class ViagemValidator{
 		$rules = [
             'pessoa.nome'	            => 'required | min:3',
             'pessoa.cpf'	            => 'required | cpf',
-            'pessoa.contato.email'	    => 'required | email | unique:contatos,email',
+            'pessoa.contato.email'	    => 'required | email',
             'pessoa.contato.telefone'	=> 'required',
             'pessoa.contato.celular'	=> 'required',
             'cidade_origem' 		    => 'required | numeric',
@@ -28,9 +28,7 @@ Class ViagemValidator{
             'empresa.contato.email'     => 'required_if:organizacao_id,1 | email',
             'empresa.contato.telefone'  => 'required_if:organizacao_id,1',
             'empresa.cidade_id' 		=> 'required_if:organizacao_id,1 | numeric',
-            'documentos.solicitante'    => 'required | mimes:jpeg,jpg,png,pdf',  
-            
-            
+            'documentos.solicitante'    => 'required | mimes:jpeg,jpg,png,pdf',
         ];
         
         if(isset($dados['tipoatrativo']) && in_array(7,$dados['tipoatrativo'])){

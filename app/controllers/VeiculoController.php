@@ -70,13 +70,14 @@ class VeiculoController extends BaseController{
 
                 unlink($file1);
                 unlink($file2);
-                
             }
 		}catch(Exception $e){
 			DB::rollback();
 			return $e->getMessage();
         }
         DB::commit();
-        return Redirect::to('viagem')->with('success','Cadastro de veículos realizado com sucesso.');
+        return Redirect::to('viagem')->with('success','Cadastro de veículos realizado com sucesso.<br>
+        Um comprovante de cadastro foi enviado no e-mail do solicitante.<br>
+        A resposta para sua solicitação será através de seu e-mail.');
     }
 }

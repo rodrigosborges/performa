@@ -3,9 +3,14 @@
 class ViagemController extends \BaseController {
 
 	public function index(){
+		return View::make('viagem.index');
+	}
+
+
+	public function create(){
 		$data = [
 			'estados'			=> MainHelper::fixArray(Estado::orderBy('nome')->get(), 'id','nome'),
-			'cidades'			=> MainHelper::fixArray(Cidade::where('estado_id','35')->orderBy('nome')->get(),'id','nome'),
+			// 'cidades'			=> MainHelper::fixArray(Cidade::where('estado_id','35')->orderBy('nome')->get(),'id','nome'),
 			'tiposvisitantes'	=> MainHelper::fixArray(TipoVisitante::all(),'id','nome',1),
 			'tiposdestinos'		=> MainHelper::fixArray(TipoDestino::all(),'id','nome',1),
 			'tiposrefeicoes'	=> MainHelper::fixArray(TipoRefeicao::all(),'id','nome',1),
@@ -22,10 +27,6 @@ class ViagemController extends \BaseController {
 		return View::make('viagem.form',compact('data'));
 	}
 
-
-	public function create(){
-	}
-
 	public function store(){
 		$dados = Input::all();
 		$dados['pessoa']['cpf'] = FormatterHelper::somenteNumeros($dados['pessoa']['cpf']);	
@@ -34,8 +35,7 @@ class ViagemController extends \BaseController {
 			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
 			return Redirect::back()->withInput()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
 		}
-		return Redirect::back()->withInput()->with('success','ae');
-
+		
 		DB::beginTransaction();
 		try{
 			#troca os campos com valores "" por null

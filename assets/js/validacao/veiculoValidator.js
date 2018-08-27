@@ -20,7 +20,6 @@ $(document).ready(function(){
 				multiple_extensions: 'jpg|jpeg|png|pdf',
 				has_multiple: true,
 			}
-
 		},
 		messages:{}
     })

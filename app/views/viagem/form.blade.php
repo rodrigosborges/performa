@@ -7,7 +7,7 @@
     <div class="card-header"><h4>Formulário para solicitar autorização de veículos</h4></div>
     <div class="card-body">
         <h5>ATENÇÃO! A SOLICITAÇÃO DEVE SER APRESENTADA COM, NO MÍNIMO, 10 DIAS ÚTEIS DE ANTECEDÊNCIA, A CONTAR DA DATA DA VIAGEM, SOB PENA DE INDEFERIMENTO.</h5>
-        <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'files' => true));?>
+        <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'files' => true,'id' => "form"));?>
         <h4 class="section-title">Responsável pela organização da viagem</h4>
         <div class="row">
             <div class="form-group col-md-12">
@@ -102,7 +102,7 @@
                             <span class="fas fa-map"></span>
                         </span>
                     </div>
-                    <?= Form::select('estado', $data['estados'],isset($viagem)? isset($viagem->pessoa->endereco->cidade_id)?$data['select']['estado']->id:null :35,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
+                    <?= Form::select('estado', $data['estados'],isset($viagem)? isset($viagem->pessoa->endereco->cidade_id)?$viagem->pessoa->endereco->cidade->estado_id :null :35,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
                 </div>
                 <?= $errors->first('estado'); ?>
             </div>
@@ -115,7 +115,7 @@
                             <span class="fas fa-map-marker-alt"></span>
                         </span>
                     </div>
-                    <?= Form::select('cidade_origem', $data['cidades'],isset($viagem)? isset($viagem->pessoa->endereco->cidade_id)?$data['select']['cidade']->id :null :3388,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>
+                    <?= Form::select('cidade_origem', [],isset($viagem)? isset($viagem->pessoa->endereco->cidade_id)? $viagem->pessoa->endereco->cidade_id :null :3388,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>
                 </div>
                 <?= $errors->first('cidade_origem'); ?>
             </div>
@@ -237,7 +237,7 @@
                     </div>
                     <?= Form::select('empresa[estado]', $data['estados'],isset($viagem)? isset($viagem->empresa->cidade_id)?$data['select']['estado']->id:null :35,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
                 </div>
-                <?= $errors->first('empresa[estado]'); ?>
+                <?= $errors->first('empresa.estado'); ?>
             </div>
 
             <div class="form-group col-md-7">
@@ -248,9 +248,8 @@
                             <span class="fas fa-map-marker-alt"></span>
                         </span>
                     </div>
-                    <?= Form::select('empresa[cidade_id]', $data['cidades'],isset($viagem)? isset($viagem->empresa->endereco->cidade_id)?$data['select']['cidade']->id :null :3388,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>
-                </div>
-                <?= $errors->first('empresa[cidade_id]'); ?>
+                    <?= Form::select('empresa[cidade_id]', [],isset($viagem)? isset($viagem->pessoa->endereco->cidade_id)? $viagem->pessoa->endereco->cidade_id :null :3388,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>                </div>
+                <?= $errors->first('empresa.cidade_id'); ?>
             </div>
         </div>
 
@@ -492,4 +491,9 @@
 @section('js')
     <script type="text/javascript" src="{{asset('assets/js/views/viagem.js')}}"></script>
     <script type="text/javascript" src="{{asset('assets/js/validacao/viagemValidator.js')}}"></script>
+
+    <script>
+        findElements($('select[name="estado"]').val(), $('select[name="cidade_origem"]'), 'Estado', 'cidades', {{Input::old('cidade_origem') ? Input::old('cidade_origem') : 3388}})
+        findElements($('select[name="empresa[estado]"]').val(), $('select[name="empresa[cidade_id]"]'), 'Estado', 'cidades', {{Input::old('empresa.cidade_id') ? Input::old('empresa.cidade_id') : 3388}})
+    </script>
 @stop

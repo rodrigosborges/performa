@@ -41,7 +41,7 @@ $(document).ready(function(){
             $(".empresa").find("input:text, select").removeClass("required")
         }
     })
-    
+
     $(document).on('change', 'select[name="estado"]', function() {
         findElements($('select[name="estado"]').val(), $('select[name="cidade_origem"]'), 'Estado', 'cidades', 3388)
     });
