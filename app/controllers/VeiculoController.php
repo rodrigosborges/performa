@@ -33,6 +33,7 @@ class VeiculoController extends BaseController{
         DB::beginTransaction();
 		try{
             $viagem->empresa_veiculo = $dados['empresa_veiculo'];
+            $viagem->status_id = 1;
             $viagem->update();
             #salva os veículos cadastrados para a viagem
             foreach($dados['tipo_veiculo_id'] as $key=>$veiculo){
@@ -76,7 +77,7 @@ class VeiculoController extends BaseController{
 			return $e->getMessage();
         }
         DB::commit();
-        return Redirect::to('viagem')->with('success','Cadastro de veículos realizado com sucesso.<br>
+        return Redirect::to('viagem/create')->with('success','Cadastro de veículos realizado com sucesso.<br>
         Um comprovante de cadastro foi enviado no e-mail do solicitante.<br>
         A resposta para sua solicitação será através de seu e-mail.');
     }

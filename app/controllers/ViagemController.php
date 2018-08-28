@@ -3,14 +3,16 @@
 class ViagemController extends \BaseController {
 
 	public function index(){
-		return View::make('viagem.index');
+		$data = [
+			'status'	=> MainHelper::fixArray(Status::all(),'id','nome'),
+		];
+		return View::make('viagem.index',compact('data'));
 	}
 
 
 	public function create(){
 		$data = [
 			'estados'			=> MainHelper::fixArray(Estado::orderBy('nome')->get(), 'id','nome'),
-			// 'cidades'			=> MainHelper::fixArray(Cidade::where('estado_id','35')->orderBy('nome')->get(),'id','nome'),
 			'tiposvisitantes'	=> MainHelper::fixArray(TipoVisitante::all(),'id','nome',1),
 			'tiposdestinos'		=> MainHelper::fixArray(TipoDestino::all(),'id','nome',1),
 			'tiposrefeicoes'	=> MainHelper::fixArray(TipoRefeicao::all(),'id','nome',1),
@@ -65,7 +67,7 @@ class ViagemController extends \BaseController {
 			if(!$pessoa){
 				$contato_pessoa = Contato::create($dados['pessoa']['contato']);
 				$pessoa = new Pessoa($dados['pessoa']);
-				$pessoa->anexo = $dados['pessoa']['cpf'].".".$ext;
+				$pessoa->anexo = $dados['pessoa']['cpf'].".zip";
 				$pessoa->contato()->associate($contato_pessoa)->save();
 			}else{
 				$pessoa->update($dados['pessoa']);
@@ -101,15 +103,39 @@ class ViagemController extends \BaseController {
 	}
 
 	public function show($id){
+		$viagem = Viagem::find($id);
+		return View::make('viagem.show',compact('viagem'));
 	}
 
-	public function edit($id){
+	public function edit($id){}
+
+	public function update($id){}
+
+	public function destroy($id){}
+
+	public function listar($tipo){
+		$dados = Input::all();
+		$viagem = new Viagem;
+				
+		if($dados['status_id'])
+			$viagem = $viagem->where('status_id',$dados['status_id']);
+
+		if($dados['nome'] || $dados['cpf']){
+			$viagem = $viagem->join('pessoas','pessoas.id','=','viagens.pessoa_id');
+			$viagem = $viagem->where('pessoas.nome','LIKE',"%".$dados['nome']."%");
+			$viagem = $viagem->where('pessoas.cpf','LIKE',"%".FormatterHelper::somenteNumeros($dados['cpf'])."%");
+		}
+
+		if($tipo == 'inativos')
+			$viagem = $viagem->onlyTrashed();
+
+		$elementos = $viagem->paginate(10);
+
+		return View::make('viagem.table', compact('elementos'));
 	}
 
-	public function update($id){
-	}
-
-	public function destroy($id){
+	public function avaliar(){
+		
 	}
 
 }

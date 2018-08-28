@@ -19,7 +19,7 @@
 </head>
 <body>
 	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
-		<a class="navbar-brand" href="{{url(Auth::guest() ? '/viagem' : '/')}}"><i class="fa fa-home"></i> Turismo</a>
+		<a class="navbar-brand" href="{{url(Auth::guest() ? '/viagem/create' : '/')}}"><i class="fa fa-home"></i> Turismo</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -28,10 +28,10 @@
 			<ul class="navbar-nav mr-auto">
 				
 				@if(Auth::check())
-				<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Cadastrar </a></li>
-					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Pendentes <span class="badge badge-secondary">{{Viagem::where('status_id',1)->count();}}</span></a></li>
-					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Aguardando revisão <span class="badge badge-secondary">{{Viagem::where('status_id',2)->count();}}</span></a></li>
-					<li class="nav-item"><a href="{{url('viagem')}}" class="nav-link">Concluídos <span class="badge badge-secondary">{{Viagem::where('status_id',3)->count();}}</span></a></li>			
+				<li class="nav-item"><a href="{{url('viagem/create')}}" class="nav-link"> Cadastrar </a></li>
+					<li class="nav-item"><a href="{{url('viagem?status_id=1')}}" class="nav-link"> Pendentes <span class="badge badge-secondary">{{Viagem::where('status_id',1)->count();}}</span></a></li>
+					<li class="nav-item"><a href="{{url('viagem?status_id=2')}}" class="nav-link"> Aguardando revisão <span class="badge badge-secondary">{{Viagem::where('status_id',2)->count();}}</span></a></li>
+					<li class="nav-item"><a href="{{url('viagem?status_id=3')}}" class="nav-link"> Concluídos <span class="badge badge-secondary">{{Viagem::where('status_id',3)->count();}}</span></a></li>			
 				@endif
 				
 			</ul>
@@ -75,10 +75,6 @@
 			</p>
 		</small>
 	</div>
-
-
-
-
 
 	<script type="text/javascript">const main_url = '{{url('/')}}/';</script>
 	<script type="text/javascript" src="{{ asset('assets/js/bibliotecas/jquery/jquery-3.2.1.min.js')}}"></script>

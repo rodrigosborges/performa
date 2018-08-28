@@ -28,6 +28,7 @@ Route::group(array('before' => 'auth'), function(){
 	Route::resource('usuario','UsuarioController', array('only' => ['create','store','edit','update']));
 });
 
-Route::get('listagem/{resource}/{tipo}', 'BaseController@listagem');
+Route::get('viagem/listar/{tipo}', 'ViagemController@listar');
+Route::get('download/{caminho}/{arquivo}','BaseController@download');
 
 // Route::get('/generate/models', '\\Jimbolino\\Laravel\\ModelBuilder\\ModelGenerator5@start');

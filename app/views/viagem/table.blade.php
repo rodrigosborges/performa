@@ -18,7 +18,12 @@
             <td>{{$viagem->created_at}}</td>
             <td>
             <div class="btn-group">
+                @if($viagem->trashed())
+                    <a href="{{url('viagem/'.$viagem->id.'/restore')}}" class="btn btn-success" title="Desativar">Restaurar</a>
+                @else
+                    <a href="{{url('viagem/'.$viagem->id)}}" class="btn btn-success" title="Ver"><span class="fa fa-arrow-right"></span></a>
                     <a href="{{url('viagem/'.$viagem->id)}}" class="delete-button btn btn-danger" title="Desativar"><span class="fa fa-trash-alt"></span></a>
+                @endif
             </div>
             </td>
         </tr>

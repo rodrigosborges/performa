@@ -50,6 +50,10 @@ class BaseController extends Controller {
 		if(isset($data[$resource]))
 			return $data[$resource];
 		return false;
-	}	
+	}
+	
+	public function download($caminho, $arquivo){
+		return Response::download(base_path()."/$caminho/$arquivo");
+	}
 
 }

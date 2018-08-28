@@ -69,22 +69,24 @@ function recontar(divs, callback){
     })
 }
 
+function listagem(url,tipo, form = null) {
+  setLoading($('div#'+tipo))
+  $.ajax({
+    url: url+(url.indexOf('?') !== -1 ? "&" : "?")+$("#"+form).serialize(),
+    success: function (data) {
+      $('div#'+tipo).html(data)
+    },
+    error: function (jqXHR, exception) {
+      $('div#'+tipo).html("<div class='alert alert-danger'>Desculpe, ocorreu um erro. <br> Recarregue a página e tente novamente</div>");
+    },
+  });
+}
+
 function AtivosInativos(resource, form = null) {
-  function listagem(url,tipo) {
-    setLoading($('div#'+tipo))
-    $.ajax({
-      url: url+(url.indexOf('?') !== -1 ? "&" : "?")+$("#"+form).serialize(),
-      success: function (data) {
-        $('div#'+tipo).html(data)
-      },
-      error: function (jqXHR, exception) {
-        $('div#'+tipo).html("<div class='alert alert-danger'>Desculpe, ocorreu um erro. <br> Recarregue a página e tente novamente</div>");
-      },
-    });
-  }
+
   $(document).ready(function(){
-    listagem(main_url+"listagem/"+resource+"/ativos",'ativos');
-    listagem(main_url+"listagem/"+resource+"/inativos",'inativos');
+    listagem(main_url+"listagem/"+resource+"/ativos",'ativos',form);
+    listagem(main_url+"listagem/"+resource+"/inativos",'inativos',form);
 
     $('#ativos').on('click', 'ul.pagination a', function(e){
       e.preventDefault();
