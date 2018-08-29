@@ -29,9 +29,9 @@
 				
 				@if(Auth::check())
 				<li class="nav-item"><a href="{{url('viagem/create')}}" class="nav-link"> Cadastrar </a></li>
-					<li class="nav-item"><a href="{{url('viagem?status_id=1')}}" class="nav-link"> Pendentes <span class="badge badge-secondary">{{Viagem::where('status_id',1)->count();}}</span></a></li>
-					<li class="nav-item"><a href="{{url('viagem?status_id=2')}}" class="nav-link"> Aguardando revisão <span class="badge badge-secondary">{{Viagem::where('status_id',2)->count();}}</span></a></li>
-					<li class="nav-item"><a href="{{url('viagem?status_id=3')}}" class="nav-link"> Concluídos <span class="badge badge-secondary">{{Viagem::where('status_id',3)->count();}}</span></a></li>			
+					@foreach(Status::all() as $status)
+						<li class="nav-item"><a href="{{url('viagem?status_id='.$status->id)}}" class="nav-link"> {{$status->nome}} <span class="badge badge-secondary">{{Viagem::where('status_id',$status->id)->count();}}</span></a></li>
+					@endforeach
 				@endif
 				
 			</ul>

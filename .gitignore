@@ -2,6 +2,7 @@
 /vendor
 veiculos/
 pessoas/
+respostas/
 composer.phar
 composer.lock
 .env.*.php

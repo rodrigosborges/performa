@@ -4,14 +4,16 @@
 @section('content')
 
 <div class="card">
-    <div class="card-header"><h4>Viagem - {{$viagem->chegada}}</h4>
+    <div class="card-header"><h4>Viagem - {{$viagem->chegada}} ( {{$viagem->status->nome}} )</h4>
         <ul class="nav nav-tabs nav-justified card-header-tabs">
 			<li class="nav-item">
 				<a data-toggle="tab" id="informacoes-tab" href="#informacoes" role="tab" aria-controls="informacoes" aria-selected="true" class="nav-link active">Informações</a>
 			</li>
-			<li class="nav-item">
-				<a data-toggle="tab" id="acoes-tab" role="tab" aria-controls="acoes" aria-selected="false" class="nav-link" href="#acoes">Ações</a>
-			</li>
+            @if($viagem->status_id == 2)
+                <li class="nav-item">
+                    <a data-toggle="tab" id="acoes-tab" role="tab" aria-controls="acoes" aria-selected="false" class="nav-link" href="#acoes">Ações</a>
+                </li>
+            @endif
 		</ul>
     </div>
     <div class="card-body tab-content">
@@ -43,9 +45,9 @@
                     <div class="input-group">
                         <span class="form-control">{{$viagem->pessoa->anexo}}</span>
                         <div class="input-group-append">
-                            <div class="input-group-text">
-                                <a class="fa fa-download" title="Download do arquivo" href='{{ url ("download/pessoas/".$viagem->pessoa->anexo)}}'> Download</a>
-                            </div>
+                            <a class="input-group-text" href='{{ url ("download/pessoas/".$viagem->pessoa->anexo)}}' title="Download do arquivo">
+                                <span class="fa fa-download"> Download</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -176,20 +178,35 @@
         </div>
         <div id="acoes" role="tabpanel" aria-labelledby="acoes-tab" class="tab-pane fade">
             <h4 class="section-title">Responder pedido de autorização</h4>
-            <?= Form::open(array('url' => 'viagem/responder', 'method' => 'POST', 'files' => true,'id' => "form"));?>
+            <?= Form::open(array('url' => "viagem/responder/$viagem->id", 'method' => 'POST', 'files' => true,'id' => "form"));?>
             <div class="row col-md-12">
+
                 <div class="form-group col-md-12">
-                    <label>Arquivo para o solicitante </label>
+                    <label>Tipo de resposta <span>*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <span class="fas fa-align-justify"></span>
+                            </span>
+                        </div>
+                        <?= Form::select('tipo_resposta_id', $data['tipos_respostas'],null,array('class'=>'form-control required','aria-required'=>"true"))?>
+                        </div>
+                    <?= $errors->first('tipo_resposta_id') ?>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label>Arquivos para o solicitante </label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
                                 <span class="fas fa-folder-open" aria-hidden="true"></span>
                             </span>
                         </div>
-                        <?= Form::file('anexo', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'anexo')) ?>
+                        <?= Form::file('anexo[]', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'anexo', 'multiple')) ?>
                     </div>
                     <?= $errors->first('anexo') ?>
                 </div>
+
                 <div class="form-group col-md-12">
                     <label>Texto <span>*</span></label>
                     <div class="input-group">
@@ -198,45 +215,13 @@
                                 <span class="fas fa-align-justify"></span>
                             </span>
                         </div>
-                        <?= Form::textarea('texto', null, array('class' => 'form-control', 'placeholder' => 'Digite aqui suas reclamações e sugestões', 'rows' => 5))?>
+                        <?= Form::textarea('texto', null, array('class' => 'form-control required', 'placeholder' => 'Digite aqui o texto para o solicitante', 'rows' => 5))?>
                     </div>
                     <?= $errors->first('texto') ?>
                 </div>
             </div>    
             <?= Form::submit('Responder', array('class' => 'btn btn-outline-success btn-block'));?>
             <?= Form::close() ?>
-
-            <h4 class="section-title">Finalizar pedido de autorização</h4>
-            <?= Form::open(array('url' => 'viagem/finalizar', 'method' => 'POST', 'files' => true,'id' => "form"));?>
-            <div class="row col-md-12">
-                <div class="form-group col-md-12">
-                    <label>Arquivo para o solicitante </label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <span class="fas fa-folder-open" aria-hidden="true"></span>
-                            </span>
-                        </div>
-                        <?= Form::file('anexo', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'anexo')) ?>
-                    </div>
-                    <?= $errors->first('anexo') ?>
-                </div>
-                <div class="form-group col-md-12">
-                    <label>Texto <span>*</span></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <span class="fas fa-align-justify"></span>
-                            </span>
-                        </div>
-                        <?= Form::textarea('texto', null, array('class' => 'form-control', 'placeholder' => 'Digite aqui suas reclamações e sugestões', 'rows' => 5))?>
-                    </div>
-                    <?= $errors->first('texto') ?>
-                </div>
-            </div>    
-            <?= Form::submit('Finalizar', array('class' => 'btn btn-outline-success btn-block'));?>
-            <?= Form::close() ?>
-        </div>
     </div>
 </div>
 @stop

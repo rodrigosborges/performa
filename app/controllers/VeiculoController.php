@@ -33,7 +33,7 @@ class VeiculoController extends BaseController{
         DB::beginTransaction();
 		try{
             $viagem->empresa_veiculo = $dados['empresa_veiculo'];
-            $viagem->status_id = 1;
+            $viagem->status_id = 2;
             $viagem->update();
             #salva os veículos cadastrados para a viagem
             foreach($dados['tipo_veiculo_id'] as $key=>$veiculo){

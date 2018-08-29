@@ -26,9 +26,10 @@ Route::group(array('before' => 'auth'), function(){
 	Route::get('reset/password/{id}','UsuarioController@password');
 	Route::post('{tipo}/password/{id}','UsuarioController@resetPass');
 	Route::resource('usuario','UsuarioController', array('only' => ['create','store','edit','update']));
+	Route::get('viagem/listar/{tipo}', 'ViagemController@listar');
+	Route::post('viagem/responder/{id}','ViagemController@responder');
 });
-
-Route::get('viagem/listar/{tipo}', 'ViagemController@listar');
 Route::get('download/{caminho}/{arquivo}','BaseController@download');
+
 
 // Route::get('/generate/models', '\\Jimbolino\\Laravel\\ModelBuilder\\ModelGenerator5@start');

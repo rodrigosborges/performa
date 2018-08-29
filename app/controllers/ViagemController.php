@@ -50,6 +50,7 @@ class ViagemController extends \BaseController {
 			
 			$viagem = new Viagem($dados);
 			$viagem->hash = Hash::make(123);
+			$viagem->status_id = 1;
 			
 			#cria arquivo do documento do solicitante
 			$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
@@ -104,7 +105,10 @@ class ViagemController extends \BaseController {
 
 	public function show($id){
 		$viagem = Viagem::find($id);
-		return View::make('viagem.show',compact('viagem'));
+		$data = [
+			'tipos_respostas' =>  MainHelper::fixArray(TipoResposta::all(),'id','nome'),
+		];
+		return View::make('viagem.show',compact('viagem','data'));
 	}
 
 	public function edit($id){}
@@ -134,8 +138,29 @@ class ViagemController extends \BaseController {
 		return View::make('viagem.table', compact('elementos'));
 	}
 
-	public function avaliar(){
-		
+	public function responder($id){
+		$dados = Input::all();
+		// return $_FILES['anexo'];
+		$resposta = new Resposta($dados);
+		$zip = new ZipArchive;
+		$nome = "$id-".date('dmY-His');
+		$zip->open(base_path()."/respostas/$nome.zip", ZipArchive::CREATE);
+		mkdir(base_path()."/respostas/$nome");
+		foreach($_FILES['anexo']['name'] as $key => $arquivos){
+			#salva os arquivos enviados na resposta
+			$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
+			$file = base_path()."/respostas/$nome/$nome($key).".$ext;
+			move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
+				$file);
+			$zip->addFile($file, "$nome(".($key+1).").$ext");
+		}
+		$zip->close();
+		Self::delete_directory(base_path()."/respostas/$nome");
+		$resposta->anexo = "$nome.zip";
+		$viagem = Viagem::find($id);
+		$viagem->respostas()->save($resposta);
+		$viagem->status_id = $dados['tipo_resposta_id'] == 1 ? 2 : 3;
+		return Redirect::back()->with('success','Solicitação respondida com sucesso!');
 	}
 
 }
