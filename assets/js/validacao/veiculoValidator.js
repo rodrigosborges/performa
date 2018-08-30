@@ -8,6 +8,7 @@ $(document).ready(function(){
 			"placa[]": {
 				placa: true,
 				has_multiple: true,
+				unique_array: true,
 			},
 			"tipo_veiculo_id[]": {
 				has_multiple: true,

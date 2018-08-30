@@ -4,7 +4,7 @@ class VeiculoController extends BaseController{
 
 	public function index(){
         $viagem = Viagem::where('hash',Input::get('hash'))->first();
-        if(!$viagem || $viagem->veiculos()->count())
+        if(!$viagem || $viagem->status_id == 2 || $viagem->status_id == 4)
             return Redirect::to('viagem')->with('error','Formulário não disponível');
 		$data = [
 			'tiposveiculos'		=> MainHelper::fixArray(TipoVeiculo::all(),'id','nome'),

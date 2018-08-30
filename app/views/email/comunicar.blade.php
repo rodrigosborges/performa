@@ -11,6 +11,7 @@
   </style>
 </head>
 <body>
+  <p style="text-align: justify;">{{$dados['titulo']}}</p>
   <p style="text-align: justify;">{{nl2br($dados['texto'])}}</p>
   <div style="margin-top:20px">
     <p>Este é um e-mail gerado automaticamente. Favor não responder.</p>

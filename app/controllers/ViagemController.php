@@ -96,7 +96,7 @@ class ViagemController extends \BaseController {
 
 		}catch(Exception $e){
 			DB::rollback();
-			return $e->getMessage();
+			return Redirect::back()->with('error','Erro no servidor');
 		}
 		DB::commit();
 
@@ -140,26 +140,46 @@ class ViagemController extends \BaseController {
 
 	public function responder($id){
 		$dados = Input::all();
-		// return $_FILES['anexo'];
-		$resposta = new Resposta($dados);
-		$zip = new ZipArchive;
-		$nome = "$id-".date('dmY-His');
-		$zip->open(base_path()."/respostas/$nome.zip", ZipArchive::CREATE);
-		mkdir(base_path()."/respostas/$nome");
-		foreach($_FILES['anexo']['name'] as $key => $arquivos){
-			#salva os arquivos enviados na resposta
-			$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
-			$file = base_path()."/respostas/$nome/$nome($key).".$ext;
-			move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
-				$file);
-			$zip->addFile($file, "$nome(".($key+1).").$ext");
+		DB::beginTransaction();
+		try{
+			$resposta = new Resposta($dados);
+			$zip = new ZipArchive;
+			$nome = "$id-".date('dmY-His');
+			$zip->open(base_path()."/respostas/$nome.zip", ZipArchive::CREATE);
+			mkdir(base_path()."/respostas/$nome");
+			foreach($_FILES['anexo']['name'] as $key => $arquivos){
+				#salva os arquivos enviados na resposta
+				$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
+				$file = base_path()."/respostas/$nome/$nome($key).".$ext;
+				move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
+					$file);
+				$zip->addFile($file, "$nome(".($key+1).").$ext");
+			}
+			$zip->close();
+			Self::delete_directory(base_path()."/respostas/$nome");
+			$resposta->anexo = "$nome.zip";
+			$viagem = Viagem::find($id);
+			$resposta = $viagem->respostas()->save($resposta);
+			$viagem->status_id = $dados['tipo_resposta_id'] == 1 ? 3 : 4;
+			$viagem->update();
+
+			$params = [
+				'texto'		=> $resposta->texto,
+				'titulo'	=> 'Resultado: '.TipoResposta::find($resposta->tipo_resposta_id)->nome,
+				'to'		=> $viagem->pessoa->contato->email,
+				'assunto'	=> 'Resposta ao pedido de autorização de veículos'
+			];
+
+			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params, $nome){
+				$message->subject($params['assunto']);
+				$message->attach(base_path()."/respostas/$nome.zip");
+				$message->to($params['to']);
+			});
+		}catch(Exception $e){
+			DB::rollback();
+			return Redirect::back()->with('error','Erro no servidor');
 		}
-		$zip->close();
-		Self::delete_directory(base_path()."/respostas/$nome");
-		$resposta->anexo = "$nome.zip";
-		$viagem = Viagem::find($id);
-		$viagem->respostas()->save($resposta);
-		$viagem->status_id = $dados['tipo_resposta_id'] == 1 ? 2 : 3;
+		DB::commit();
 		return Redirect::back()->with('success','Solicitação respondida com sucesso!');
 	}
 

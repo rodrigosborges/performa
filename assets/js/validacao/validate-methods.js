@@ -222,3 +222,14 @@ jQuery.validator.addMethod("has_multiple", function (value, element, params) {
 
   return (inputs.length > 1);
 }, "É necessário adicionar ao menos um veículo à tabela");  // Mensagem padrão
+
+jQuery.validator.addMethod("unique_array", function (value, element, params) {
+  inputs = $("input[name='"+element.name+"'")//input dos arquivos
+  var quantidade = 0
+  $.each(inputs, function(index, input) {
+    if(value == input.value)
+      quantidade++
+  }) 
+
+  return quantidade == 1;
+}, "Não é permitido colocar dois veículos com a mesma placa");  // Mensagem padrão

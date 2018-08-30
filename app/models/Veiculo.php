@@ -19,4 +19,9 @@ class Veiculo extends Eloquent{
     public function viagem(){
         return $this->belongsTo('Viagem', 'viagem_id', 'id');
     }
+
+    public function setPlacaAttribute($chegada){
+        $this->attributes['placa'] =  mb_strtoupper($chegada, 'UTF-8');
+    }
+
 }
