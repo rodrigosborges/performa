@@ -8,6 +8,14 @@ class FormatterHelper
   * @param $keys : Array contendo o nome dos campos que serão formatadas
   *                Caso seja vazia, todos os campos serão formatados
   **/
+  public static function multiSelectValues($array){
+    $newarray = [];
+    foreach($array as $element){
+      array_push($newarray,$element->id);
+    }
+    return $newarray;
+  }
+
   public static function toUpperCase($values, $except= [], $keys = []) {
     $result = $values;
     if (empty($keys)) {

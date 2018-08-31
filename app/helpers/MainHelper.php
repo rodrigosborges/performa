@@ -238,9 +238,11 @@ class mainHelper{
 	}
 
 	public static function manyToMany($model,$array, $especificar){
+		$newarray = [];
 		foreach($array as $var){
-			$model->attach([$var => ['especificar' => $especificar]]);
+			$newarray[$var] = ['especificar' => $especificar];
 		}
+		$model->sync($newarray);
 	}
 }
 ?>

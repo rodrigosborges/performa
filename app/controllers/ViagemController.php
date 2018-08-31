@@ -49,7 +49,7 @@ class ViagemController extends \BaseController {
 			},$dados);
 			
 			$viagem = new Viagem($dados);
-			$viagem->hash = Hash::make(123);
+			$viagem->hash = Hash::make("hash");
 			$viagem->status_id = 1;
 			
 			#cria arquivo do documento do solicitante
@@ -94,9 +94,21 @@ class ViagemController extends \BaseController {
 			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], @$dados['especificar_visitante']);
 			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], @$dados['especificar_destino']);
 
+			$params = [
+				'texto'		=> "O cadastro para autorização de veículos é divido em duas partes. A segunda parte do formulário que é destinada para os veículos estará disponível no link acima, e é necessária para validar seu formulário.",
+				'titulo'	=> 'Link para continuar o cadastro <a href="'.url('veiculo?hash='.$viagem->hash).'">aqui</a>',
+				'to'		=> $viagem->pessoa->contato->email,
+				'assunto'	=> 'Cadastro parcial - Autorização de veículos'
+			];
+
+			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params){
+				$message->subject($params['assunto']);
+				$message->to($params['to']);
+			});
+
 		}catch(Exception $e){
 			DB::rollback();
-			return Redirect::back()->with('error','Erro no servidor');
+			return Redirect::back()->withInput()->with('error','Erro no servidor');
 		}
 		DB::commit();
 
@@ -111,9 +123,119 @@ class ViagemController extends \BaseController {
 		return View::make('viagem.show',compact('viagem','data'));
 	}
 
-	public function edit($id){}
+	public function edit($id){
+		$viagem = Viagem::find($id);
 
-	public function update($id){}
+		if($viagem->status_id != 3 || $viagem->hash != Input::get('hash'))
+			return Redirect::to('viagem/create')->with('error','Edição de formulário não disponível');
+
+		$data = [
+			'estados'			=> MainHelper::fixArray(Estado::orderBy('nome')->get(), 'id','nome'),
+			'cidades_visitante'=> MainHelper::fixArray(Cidade::where('estado_id',$viagem->cidade->estado_id)->get(),'id','nome'),
+			'tiposvisitantes'	=> MainHelper::fixArray(TipoVisitante::all(),'id','nome',1),
+			'tiposdestinos'		=> MainHelper::fixArray(TipoDestino::all(),'id','nome',1),
+			'tiposrefeicoes'	=> MainHelper::fixArray(TipoRefeicao::all(),'id','nome',1),
+			'tiposmotivos'		=> MainHelper::fixArray(TipoMotivo::all(),'id','nome',1),
+			'tiposatrativos'	=> MainHelper::fixArray(TipoAtrativo::all(),'id','nome',1),
+			'tiposveiculos'		=> MainHelper::fixArray(TipoVeiculo::all(),'id','nome'),
+			'quantidadesvezes'	=> MainHelper::fixArray(QuantidadeVez::all(),'id','nome'),
+			'bairros'			=> MainHelper::fixArray(Bairro::all(),'id','nome'),
+			'organizacoes'		=> Organizacao::all(),
+			'url'				=> url("viagem/$id"),
+			'method'			=> 'PUT',
+			'id'				=>	null
+		];
+
+		if(isset($viagem->empresa)){
+			$data+= [
+				'cidades_empresa'=> MainHelper::fixArray(Cidade::where('estado_id',$viagem->empresa->cidade->estado_id)->get(),'id','nome')
+			];
+		}
+			
+		return View::make('viagem.form',compact('data','viagem'));
+	}
+
+	public function update($id){
+		$dados = Input::except('pessoa.cpf');
+		$validator = Validator::make($dados, ViagemValidator::rules($id, $dados));
+		if($validator->fails()){
+			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
+			return Redirect::back()->withInput()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
+		}
+		
+		DB::beginTransaction();
+		try{
+			#troca os campos com valores "" por null
+			$dados = array_map(function($dado){ 
+				if($dado == "")
+					return null;
+				else
+					return $dado;
+			},$dados);
+			
+			$viagem = Viagem::find($id);
+			
+			#cria arquivo do documento do solicitante
+			if($dados['documentos']['solicitante']){
+				$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
+				$file = base_path()."/pessoas"."/".$dados['pessoa']['cpf'].".".$ext;
+				move_uploaded_file($_FILES['documentos']['tmp_name']['solicitante'],
+				$file);
+				$zip = new ZipArchive;
+				$zip->open(base_path().'/'.'pessoas/'.$dados['pessoa']['cpf'].'.zip', ZipArchive::CREATE);
+				$zip->addFile($file, $dados['pessoa']['cpf'].".".$ext);
+				$zip->close();
+				unlink($file);
+			}
+
+			#create ou update de pessoa conforme o cpf
+			$pessoa = $viagem->pessoa;
+			$pessoa->update($dados['pessoa']);
+			$pessoa->contato->update($dados['pessoa']['contato']);
+
+			#cadastra a empresa caso a viagem seja organizada por uma
+			if($dados['organizacao_id'] == 1){
+				if($viagem->empresa){
+					$viagem->empresa->update($dados['empresa']);
+					$viagem->empresa->contato->update($dados['empresa']['contato']);
+				}else{
+					$contato_empresa = Contato::create($dados['empresa']['contato']);
+					$empresa = new Empresa($dados['empresa']);
+					$empresa->contato()->associate($contato_empresa)->save();
+					$viagem->empresa()->associate($empresa);
+				}
+			}else
+				$viagem->empresa()->delete();
+			
+			$viagem->update($dados);
+			
+			#salva os relacionamentos many to many da viagem
+			MainHelper::manyToMany($viagem->tiposAtrativos(), $dados['tipoatrativo'], @$dados['especificar_atrativo']);
+			MainHelper::manyToMany($viagem->tiposMotivos(), $dados['tipomotivo'], @$dados['especificar_motivo']);
+			MainHelper::manyToMany($viagem->tiposRefeicoes(), $dados['tiporefeicao'], @$dados['especificar_refeicao']);
+			MainHelper::manyToMany($viagem->tiposVisitantes(), $dados['tipovisitante'], @$dados['especificar_visitante']);
+			MainHelper::manyToMany($viagem->tiposDestinos(), $dados['tipodestino'], @$dados['especificar_destino']);
+
+			$params = [
+				'texto'		=> "A edição da autorização de veículos é divido em duas partes. A segunda parte do formulário que é destinada para os veículos estará disponível no link acima, e é necessária para validar seu formulário.",
+				'titulo'	=> 'Link para continuar a edição <a href="'.url("veiculo/$viagem->id/edit?hash=".$viagem->hash).'">aqui</a>',
+				'to'		=> $viagem->pessoa->contato->email,
+				'assunto'	=> 'Edição parcial - Autorização de veículos'
+			];
+
+			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params){
+				$message->subject($params['assunto']);
+				$message->to($params['to']);
+			});
+
+		}catch(Exception $e){
+			DB::rollback();
+			return Redirect::back()->with('error','Erro no servidor');
+		}
+		DB::commit();
+
+		return Redirect::to("veiculo/$viagem->id/edit?hash=".$viagem->hash)->with('success', "Primeira etapa editada com sucesso.<br>Caso não seja possível efetuar a edição de veículos no momento, utilize esse link: <b>".url("veiculo/$viagem->id/edit?hash=".$viagem->hash)."</b>");
+	}
 
 	public function destroy($id){}
 
@@ -161,10 +283,13 @@ class ViagemController extends \BaseController {
 			$viagem = Viagem::find($id);
 			$resposta = $viagem->respostas()->save($resposta);
 			$viagem->status_id = $dados['tipo_resposta_id'] == 1 ? 3 : 4;
+			$viagem->hash = Hash::make('hash');
 			$viagem->update();
+			$texto = $resposta->texto;
+			$texto .= $dados['tipo_resposta_id'] == 1 ? ("<br><br>Para acessar a edição de cadastro clique <a href='".url("viagem/$viagem->id/edit?hash=$viagem->hash")."'>aqui</a>.") : "";
 
 			$params = [
-				'texto'		=> $resposta->texto,
+				'texto'		=> $texto,
 				'titulo'	=> 'Resultado: '.TipoResposta::find($resposta->tipo_resposta_id)->nome,
 				'to'		=> $viagem->pessoa->contato->email,
 				'assunto'	=> 'Resposta ao pedido de autorização de veículos'

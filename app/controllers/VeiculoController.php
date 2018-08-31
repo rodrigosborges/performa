@@ -72,6 +72,19 @@ class VeiculoController extends BaseController{
                 unlink($file1);
                 unlink($file2);
             }
+
+            $params = [
+				'texto'		=> "O formulário será avaliado pela Secretaria de Mobilidade Urbana e Proteção ao Cidadão e a resposta da avaliação será enviada neste endereço de e-mail.",
+				'titulo'	=> 'Cadastro realizado com sucesso.',
+				'to'		=> $viagem->pessoa->contato->email,
+				'assunto'	=> 'Cadastro concluído - Autorização de veículos'
+			];
+
+			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params){
+				$message->subject($params['assunto']);
+				$message->to($params['to']);
+			});
+
 		}catch(Exception $e){
 			DB::rollback();
 			return $e->getMessage();
@@ -80,5 +93,23 @@ class VeiculoController extends BaseController{
         return Redirect::to('viagem/create')->with('success','Cadastro de veículos realizado com sucesso.<br>
         Um comprovante de cadastro foi enviado no e-mail do solicitante.<br>
         A resposta para sua solicitação será através de seu e-mail.');
+    }
+
+    public function edit($id){
+        $viagem = Viagem::find($id);
+		if($viagem->status_id != 3 || $viagem->hash != Input::get('hash'))
+            return Redirect::to('viagem/create')->with('error','Edição de formulário não disponível');
+            
+        $data = [
+			'tiposveiculos'		=> MainHelper::fixArray(TipoVeiculo::all(),'id','nome'),
+			'url'				=> url("veiculo"),
+			'method'			=> 'POST',
+            'id'				=> null,
+            'hash'              => Input::get('hash')
+		];
+    }
+
+    public function update($id){
+
     }
 }

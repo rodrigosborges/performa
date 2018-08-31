@@ -15,7 +15,7 @@ Route::group(array('before' => 'guest'),function(){
 	Route::post('usuario/atualizarSenha','UsuarioController@atualizarSenha');
 });
 
-Route::resource('viagem','ViagemController', ['only' => ['create']]);
+Route::resource('viagem','ViagemController', ['only' => ['create','edit','update']]);
 
 Route::resource('veiculo','VeiculoController');
 
@@ -24,7 +24,7 @@ Route::get('findElements/{model}/{relacao}/{id}', 'QuerieHelper@findElements');
 Route::group(array('before' => 'auth'), function(){
 	Route::get('logout','LoginController@logout');
 	Route::get('reset/password/{id}','UsuarioController@password');
-	Route::resource('viagem','ViagemController', ['except' => ['create']]);
+	Route::resource('viagem','ViagemController', ['except' => ['create','edit','update']]);
 	Route::post('{tipo}/password/{id}','UsuarioController@resetPass');
 	Route::resource('usuario','UsuarioController', array('only' => ['create','store','edit','update']));
 	Route::get('viagem/listar/{tipo}', 'ViagemController@listar');
