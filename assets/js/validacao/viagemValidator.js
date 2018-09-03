@@ -44,7 +44,10 @@ $(document).ready(function(){
 			},
 			"documentos[solicitante]": {
 				extension: 'jpg|jpeg|png|pdf',
-			}
+			},
+			"anexo[]" :{
+				multiple_extensions: 'jpg|jpeg|png|pdf',
+			},
 		},
 		messages:{}
 	})

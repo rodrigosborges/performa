@@ -8,7 +8,12 @@
         <ul class="nav nav-tabs nav-justified card-header-tabs">
 			<li class="nav-item">
 				<a data-toggle="tab" id="informacoes-tab" href="#informacoes" role="tab" aria-controls="informacoes" aria-selected="true" class="nav-link active">Informações</a>
-			</li>
+            </li>
+            @if($viagem->respostas->count() > 0)
+                <li class="nav-item">
+                    <a data-toggle="tab" id="respostas-tab" role="tab" aria-controls="respostas" aria-selected="false" class="nav-link" href="#respostas">Respostas</a>
+                </li>
+            @endif
             @if($viagem->status_id == 2)
                 <li class="nav-item">
                     <a data-toggle="tab" id="acoes-tab" role="tab" aria-controls="acoes" aria-selected="false" class="nav-link" href="#acoes">Ações</a>
@@ -176,6 +181,35 @@
             </table>
         
         </div>
+
+        <div id="respostas" role="tabpanel" aria-labelledby="respostas-tab" class="tab-pane fade">
+            @foreach($viagem->respostas as $resposta)
+            <h4 class="section-title">{{FormatterHelper::setFullDate($resposta->created_at)}}</h4>
+            <div class="row col-md-12">
+                <div class="form-group col-sm-6">
+                    <label ><strong>Tipo</strong></label>
+                    <p class="card-text">{{$resposta->tipo_resposta()->first()->nome}}</p>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label ><strong>Arquivos</strong></label>
+                    <div class="input-group">
+                        <span class="form-control">{{$resposta->anexo}}</span>
+                        <div class="input-group-append">
+                            <a class="input-group-text" href='{{ url ("download/respostas/".$resposta->anexo)}}' title="Download do arquivo">
+                                <span class="fa fa-download"> Download</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label ><strong>Texto</strong></label>
+                    <p class="card-text">{{$resposta->texto}}</p>
+                </div>
+
+            </div>
+            @endforeach
+        </div>
+
         <div id="acoes" role="tabpanel" aria-labelledby="acoes-tab" class="tab-pane fade">
             <h4 class="section-title">Responder pedido de autorização</h4>
             <?= Form::open(array('url' => "viagem/responder/$viagem->id", 'method' => 'POST', 'files' => true,'id' => "form"));?>
@@ -202,7 +236,7 @@
                                 <span class="fas fa-folder-open" aria-hidden="true"></span>
                             </span>
                         </div>
-                        <?= Form::file('anexo[]', array('style' => 'opacity: 1;','class' => 'form-control required', 'id' => 'anexo', 'multiple')) ?>
+                        <?= Form::file('anexo[]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'anexo', 'multiple')) ?>
                     </div>
                     <?= $errors->first('anexo') ?>
                 </div>
@@ -222,6 +256,22 @@
             </div>    
             <?= Form::submit('Responder', array('class' => 'btn btn-outline-success btn-block'));?>
             <?= Form::close() ?>
+        </div>
     </div>
 </div>
+@stop
+
+@section('js')
+    <script>
+        $(document).ready(function(){
+            $('#form').validate({
+                rules: {
+                    "anexo[]": {
+                        multiple_extensions: 'jpg|jpeg|png|pdf',
+                    }
+                },
+                messages:{}
+            })
+        })
+    </script>
 @stop

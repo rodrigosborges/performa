@@ -223,6 +223,12 @@ jQuery.validator.addMethod("has_multiple", function (value, element, params) {
   return (inputs.length > 1);
 }, "É necessário adicionar ao menos um veículo à tabela");  // Mensagem padrão
 
+jQuery.validator.addMethod("has_added", function (value, element, params) {
+  table = $("table#"+params+" >tbody:last >tr").length
+
+  return table > 0
+}, "É necessário adicionar ao menos um veículo à tabela");  // Mensagem padrão
+
 jQuery.validator.addMethod("unique_array", function (value, element, params) {
   inputs = $("input[name='"+element.name+"'")//input dos arquivos
   var quantidade = 0
@@ -232,4 +238,15 @@ jQuery.validator.addMethod("unique_array", function (value, element, params) {
   }) 
 
   return quantidade == 1;
+}, "Não é permitido colocar dois veículos com a mesma placa");  // Mensagem padrão
+
+jQuery.validator.addMethod("unique_array_table", function (value, element, params) {
+  valores = $("."+params)
+  var quantidade = 0
+  $.each(valores, function(index, input) {
+    if(value == input.innerHTML)
+      quantidade++
+  }) 
+
+  return quantidade == 0;
 }, "Não é permitido colocar dois veículos com a mesma placa");  // Mensagem padrão

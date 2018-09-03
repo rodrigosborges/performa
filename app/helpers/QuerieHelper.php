@@ -4,11 +4,16 @@ class QuerieHelper extends Controller{
 
   public function unique($tabela,$campo,$tipo,$id){
     $dados = Input::all();
-
     foreach ($dados as $offset => $dado) {
       if(is_array($dado)){
-        foreach ($dado as $value) {
-          $dado = $value;
+        foreach ($dado as $offset => $value) {
+          if(is_array($dado)){
+            foreach ($value as $offset => $value2) {
+              $dado = $value2;
+            }
+          }else{
+            $dado = $value;
+          }
         }
       }
       $data['value'] = ($offset != 'email' && $offset != 'numero')? FormatterHelper::removeSinais($dado): $data['value'] = $dado;

@@ -143,7 +143,7 @@ class ViagemController extends \BaseController {
 			'organizacoes'		=> Organizacao::all(),
 			'url'				=> url("viagem/$id"),
 			'method'			=> 'PUT',
-			'id'				=>	null
+			'id'				=>	$id
 		];
 
 		if(isset($viagem->empresa)){

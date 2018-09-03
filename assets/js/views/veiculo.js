@@ -10,12 +10,12 @@ $(document).ready(function(){
             form.appendTo("#veiculo")
             $("#veiculotable").find('tbody').append(
                 "<tr class='"+hash+"'><td>"+veiculo.find("select[name='tipo_veiculo_id[]'] option:selected").html()+
-                "</td><td>"+veiculo.find("input[name='placa[]']").val()+
+                "</td><td class='placaveiculo'>"+veiculo.find("input[name='placa[]']").val()+
                 "</td><td>"+veiculo.find("input[name='registro[]']").val()+
-                "</td><td><button type='button' class='btn btn-outline-danger btn-block' onclick='excluirVeiculo(`"+hash+"`)'>Excluir</button></td></tr>"
+                "</td>"+($("#form").attr('data-veiculo_id')? "<td></td>" : "")+"<td><button type='button' class='btn btn-outline-danger btn-block' onclick='excluirVeiculo(`"+hash+"`)'>Excluir</button></td></tr>"
             )
         }
-        addRemoveRule($("#veiculo").find("input:text, input:file, select"), "remove", "has_multiple")})
+        addRemoveRule($("#veiculo").find("input:text, input:file, select"), "remove", "has_added")})
 
         $(".send-form").on('click', function(){
             if($("#form").valid()){
@@ -25,6 +25,11 @@ $(document).ready(function(){
 
    })
 
+function excluirVeiculoExistente(id){
+    $(".excluirVeiculos").append("<input name='excluir[]' type='hidden' value='"+id+"'>")
+    $(".excluirVeiculo"+id).remove()
+}
+
 function excluirVeiculo(div){
     $("."+div).remove() 
 }
@@ -33,10 +38,10 @@ function addRemoveRule(inputs, param, rule){
     inputs.map((index,input) => {
         if(param == "add"){
             $(input).rules("add",{ required:true })
-            $(input).rules("remove","has_multiple")
+            $(input).rules("remove","has_added")
         }else{
             $(input).rules("remove","required")
-            $(input).rules("add",{ has_multiple:true })
+            $(input).rules("add",{ has_added:"veiculotable" })
         }
     })
 }

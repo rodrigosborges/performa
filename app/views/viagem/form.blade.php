@@ -490,7 +490,23 @@
                 </div>
                 <?= $errors->first('sugestao') ?>
             </div>
-        </div>          
+        </div>
+        
+        @if(isset($viagem))
+        <h4 class="section-title">Enviar arquivos</h4>
+        <div class="form-group">
+            <label>Envie arquivos aqui caso necessário</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <span class="fas fa-folder-open" aria-hidden="true"></span>
+                    </span>
+                </div>
+                <?= Form::file('anexo[]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'anexo', 'multiple')) ?>
+            </div>
+            <?= $errors->first('anexo') ?>
+        </div>
+        @endif
 
 
         <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block'));?>
