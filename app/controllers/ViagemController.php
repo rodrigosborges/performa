@@ -108,7 +108,8 @@ class ViagemController extends \BaseController {
 
 		}catch(Exception $e){
 			DB::rollback();
-			return Redirect::back()->withInput()->with('error','Erro no servidor');
+			return Redirect::back()->withInput()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
+			Caso o erro persista, contate o suporte técnico.');
 		}
 		DB::commit();
 
@@ -146,7 +147,7 @@ class ViagemController extends \BaseController {
 			'id'				=>	$id
 		];
 
-		if(isset($viagem->empresa)){
+		if($viagem->empresa){
 			$data+= [
 				'cidades_empresa'=> MainHelper::fixArray(Cidade::where('estado_id',$viagem->empresa->cidade->estado_id)->get(),'id','nome')
 			];
@@ -176,16 +177,37 @@ class ViagemController extends \BaseController {
 			$viagem = Viagem::find($id);
 			
 			#cria arquivo do documento do solicitante
+			$cpf = FormatterHelper::somenteNumeros($viagem->pessoa->cpf);
 			if($dados['documentos']['solicitante']){
 				$ext = pathinfo($_FILES['documentos']['name']['solicitante'])['extension'];
-				$file = base_path()."/pessoas"."/".$dados['pessoa']['cpf'].".".$ext;
+				$file = base_path()."/pessoas"."/".$cpf.".".$ext;
 				move_uploaded_file($_FILES['documentos']['tmp_name']['solicitante'],
 				$file);
 				$zip = new ZipArchive;
-				$zip->open(base_path().'/'.'pessoas/'.$dados['pessoa']['cpf'].'.zip', ZipArchive::CREATE);
-				$zip->addFile($file, $dados['pessoa']['cpf'].".".$ext);
+				$zip->open(base_path().'/'.'pessoas/'.$cpf.'.zip', ZipArchive::CREATE);
+				$zip->addFile($file, $cpf.".".$ext);
 				$zip->close();
 				unlink($file);
+			}
+
+			if(!empty($dados['anexo'])){
+				$anexo = new Anexo();
+				$zip = new ZipArchive;
+				$nome = "$id-anexo-".date('U');
+				$zip->open(base_path()."/anexos/$nome.zip", ZipArchive::CREATE);
+				mkdir(base_path()."/anexos/$nome");
+				foreach($_FILES['anexo']['name'] as $key => $arquivos){
+					#salva os arquivos enviados na resposta
+					$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
+					$file = base_path()."/anexos/$nome/$nome($key).".$ext;
+					move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
+						$file);
+					$zip->addFile($file, "$nome(".($key+1).").$ext");
+				}
+				$zip->close();
+				Self::delete_directory(base_path()."/anexos/$nome");
+				$anexo->nome = "$nome.zip";
+				$viagem->anexos()->save($anexo);
 			}
 
 			#create ou update de pessoa conforme o cpf
@@ -230,14 +252,27 @@ class ViagemController extends \BaseController {
 
 		}catch(Exception $e){
 			DB::rollback();
-			return Redirect::back()->with('error','Erro no servidor');
+			return $e->getMessage();
+			return Redirect::back()->withInput()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
+			Caso o erro persista, contate o suporte técnico.');
 		}
 		DB::commit();
 
 		return Redirect::to("veiculo/$viagem->id/edit?hash=".$viagem->hash)->with('success', "Primeira etapa editada com sucesso.<br>Caso não seja possível efetuar a edição de veículos no momento, utilize esse link: <b>".url("veiculo/$viagem->id/edit?hash=".$viagem->hash)."</b>");
 	}
 
-	public function destroy($id){}
+	public function destroy($id){
+		try {
+			$viagem = Viagem::find($id);
+			$viagem->delete();
+		}catch (\Exception $e) {
+			DB::rollback();
+			return Redirect::back()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
+			Caso o erro persista, contate o suporte técnico.')->withInput();
+		}
+		DB::commit();
+		return Redirect::back()->with('success','Viagem desativado com sucesso.');
+	}
 
 	public function listar($tipo){
 		$dados = Input::all();
@@ -265,21 +300,24 @@ class ViagemController extends \BaseController {
 		DB::beginTransaction();
 		try{
 			$resposta = new Resposta($dados);
-			$zip = new ZipArchive;
-			$nome = "$id-".date('dmY-His');
-			$zip->open(base_path()."/respostas/$nome.zip", ZipArchive::CREATE);
-			mkdir(base_path()."/respostas/$nome");
-			foreach($_FILES['anexo']['name'] as $key => $arquivos){
-				#salva os arquivos enviados na resposta
-				$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
-				$file = base_path()."/respostas/$nome/$nome($key).".$ext;
-				move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
-					$file);
-				$zip->addFile($file, "$nome(".($key+1).").$ext");
+			$nome = "";
+			if(!empty($dados['anexo'])){
+				$zip = new ZipArchive;
+				$nome = "$id-resposta-".date('U');
+				$zip->open(base_path()."/respostas/$nome.zip", ZipArchive::CREATE);
+				mkdir(base_path()."/respostas/$nome");
+				foreach($_FILES['anexo']['name'] as $key => $arquivos){
+					#salva os arquivos enviados na resposta
+					$ext = pathinfo($_FILES['anexo']['name'][$key])['extension'];
+					$file = base_path()."/respostas/$nome/$nome($key).".$ext;
+					move_uploaded_file($_FILES['anexo']['tmp_name'][$key],
+						$file);
+					$zip->addFile($file, "$nome(".($key+1).").$ext");
+				}
+				$zip->close();
+				Self::delete_directory(base_path()."/respostas/$nome");
+				$resposta->anexo = "$nome.zip";
 			}
-			$zip->close();
-			Self::delete_directory(base_path()."/respostas/$nome");
-			$resposta->anexo = "$nome.zip";
 			$viagem = Viagem::find($id);
 			$resposta = $viagem->respostas()->save($resposta);
 			$viagem->status_id = $dados['tipo_resposta_id'] == 1 ? 3 : 4;
@@ -297,12 +335,14 @@ class ViagemController extends \BaseController {
 
 			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params, $nome){
 				$message->subject($params['assunto']);
-				$message->attach(base_path()."/respostas/$nome.zip");
+				if(isset($zip))
+					$message->attach(base_path()."/respostas/$nome.zip");
 				$message->to($params['to']);
 			});
 		}catch(Exception $e){
 			DB::rollback();
-			return Redirect::back()->with('error','Erro no servidor');
+			return Redirect::back()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
+			Caso o erro persista, contate o suporte técnico.');
 		}
 		DB::commit();
 		return Redirect::back()->with('success','Solicitação respondida com sucesso!');

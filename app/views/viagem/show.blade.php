@@ -179,6 +179,30 @@
                     @endforeach
                 </tbody>
             </table>
+
+            @if($viagem->anexos)
+                <h4 class="section-title">Anexos</h4>
+                @foreach($viagem->anexos as $anexo)
+                    <div class="row col-md-12">
+                        <div class="col-md-6">
+                            <label ><strong>Data</strong></label>
+                            <p class="card-text">{{$anexo->created_at}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label><strong>Documento</strong></label>
+                            <div class="input-group">
+                                <span class="form-control">{{$anexo->nome}}</span>
+                                <div class="input-group-append">
+                                    <a class="input-group-text" href='{{ url ("download/anexos/".$anexo->nome)}}' title="Download do arquivo">
+                                        <span class="fa fa-download"> Download</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                @endforeach
+            @endif
         
         </div>
 
@@ -190,18 +214,20 @@
                     <label ><strong>Tipo</strong></label>
                     <p class="card-text">{{$resposta->tipo_resposta()->first()->nome}}</p>
                 </div>
-                <div class="form-group col-sm-6">
-                    <label ><strong>Arquivos</strong></label>
-                    <div class="input-group">
-                        <span class="form-control">{{$resposta->anexo}}</span>
-                        <div class="input-group-append">
-                            <a class="input-group-text" href='{{ url ("download/respostas/".$resposta->anexo)}}' title="Download do arquivo">
-                                <span class="fa fa-download"> Download</span>
-                            </a>
+                @if($resposta->anexo)
+                    <div class="form-group col-sm-6">
+                        <label ><strong>Arquivos</strong></label>
+                        <div class="input-group">
+                            <span class="form-control">{{$resposta->anexo}}</span>
+                            <div class="input-group-append">
+                                <a class="input-group-text" href='{{ url ("download/respostas/".$resposta->anexo)}}' title="Download do arquivo">
+                                    <span class="fa fa-download"> Download</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group col-sm-6">
+                @endif
+                <div class="form-group col-sm-12">
                     <label ><strong>Texto</strong></label>
                     <p class="card-text">{{$resposta->texto}}</p>
                 </div>

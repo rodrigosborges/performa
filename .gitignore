@@ -3,6 +3,7 @@
 veiculos/
 pessoas/
 respostas/
+anexos/
 composer.phar
 composer.lock
 .env.*.php

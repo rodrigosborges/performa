@@ -73,4 +73,21 @@ class BaseController extends Controller {
 		rmdir($dirname);
 		return true;
 	}
+
+	public function restore($model,$id){	
+		$model = ucfirst($model);
+		try{
+			$result = $model::onlyTrashed()->find($id);
+			if(!$result)
+				return Redirect::back()->with('error', "Não foi possível reativar o(a) $model informado(a), tente novamente mais tarde.");
+
+			$result->restore();
+			return Redirect::back()->with('success', "$model reativado(a) com sucesso!");
+		}catch(Exception $e){
+			return Redirect::back()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
+			Caso o erro persista, contate o suporte técnico.');
+		}
+		
+
+	}
 }

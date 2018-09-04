@@ -4,12 +4,19 @@ class UsuarioValidator{
     //REGRAS DE VALIDAÇÃO
     $rules = [
       //Dados individuo
-      'nome'                        => 'required|min:3|max:70',
-      'login'                     => 'required|min:5|unique:usuarios,usuario',
-      'email'                       => 'required|unique:usuarios,email',
-      'password'                    => 'required|min:10|regex:/^(?=(?:.*[a-zA-z]{1,}))(?=(?:.*[0-9]){1,})(?=(?:.*[!@#$%&*]){1,})(.{10,})$/'
+      'nome'    => 'required|min:3|max:70',
+      'usuario'   => 'required|min:5|unique:usuarios,usuario,'.($usuario ? $usuario->id : null),
+      'email'   => 'required|email|unique:usuarios,email,'.($usuario ? $usuario->id : null),
     ];
+
+    if(!$usuario){
+      $rules += [
+        'password' => 'required|min:10|regex:/^(?=(?:.*[a-zA-z]{1,}))(?=(?:.*[0-9]){1,})(?=(?:.*[!@#$%&*]){1,})(.{10,})$/'
+      ];
+    }
+
     return $rules;
+  
   }
 
 

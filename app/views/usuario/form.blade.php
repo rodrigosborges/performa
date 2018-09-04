@@ -16,66 +16,62 @@
   <div class="card-body">
     <?= Form::open(array('url' => $data['url'], 'id' => 'form', 'method'=>$data['method'], 'data-usuario_id'=> isset($usuario)? $usuario->id : null)) ?>
 
-    <div class="row">
-      <div class="form-group">
-        <label>Nome <span>*</span></label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <span class="fas fa-user"></span>
-            </span>
+    <div class="row col-md-12">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Nome <span>*</span></label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span class="fas fa-user"></span>
+              </span>
+            </div>
+            <?= Form::text('nome',isset($usuario)? $usuario->nome : null,array('class' => 'form-control required','maxlength' => '200'))?>
           </div>
-          <?= Form::text('nome',isset($usuario)? $usuario->individuo->nome : null,array('class' => 'form-control required','maxlength' => '200'))?>
+          <?= $errors->first('nome'); ?>
         </div>
-        <?= $errors->first('nome'); ?>
       </div>
-      <div class="form-group col-md-{{(Usuario::showNivel((isset($usuario)? $usuario:null)) ?'8': '12')}}">
-        <label>Usuário <span>*</span></label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <span class="fas fa-user"></span>
-            </span>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Usuário <span>*</span></label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span class="fas fa-user"></span>
+              </span>
+            </div>
+            <?= Form::text('usuario',isset($usuario)? $usuario->usuario :null,array('class' => 'form-control required','maxlength' => '70'))?>
           </div>
-          <?= Form::text('usuario',isset($usuario)? $usuario->usuario :null,array('class' => 'form-control required','maxlength' => '70'))?>
+          <?= $errors->first('usuario'); ?>
         </div>
-        <?= $errors->first('usuario'); ?>
       </div>
-
-      <div class="form-group col-md-4">
-        <label>Tipo <span>*</span></label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><span class="fa fa-list-alt"></span></span>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Email <span>*</span></label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><span class="fas fa-envelope" aria-hidden="true"></span></span>
+            </div>
+            <?= Form::text('email',isset($usuario)? $usuario->email :null,array('class' => 'form-control required', 'maxlength' => '50'))?>
           </div>
-          <?= Form::select('nivel_id', $data['niveis'], isset($usuario)? $usuario->nivel_id :null, array('class' => 'form-control required'));?>
+          <?= $errors->first('email'); ?>
         </div>
-        <?= $errors->first('nivel_id'); ?>
-      </div>
-
-      <div class="form-group">
-        <label>Email <span>*</span></label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><span class="fas fa-envelope" aria-hidden="true"></span></span>
-          </div>
-          <?= Form::text('email',isset($usuario)? $usuario->email :null,array('class' => 'form-control required', 'maxlength' => '50'))?>
-        </div>
-        <?= $errors->first('email'); ?>
       </div>
 
       @if(!isset($usuario))
-      <div class="form-group">
-        <label>Senha <span>*</span></label>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">
-              <span class="fas fa-key"></span>
-            </span>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>Senha <span>*</span></label>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span class="fas fa-key"></span>
+              </span>
+            </div>
+            <?= Form::password('password', array('class' => 'form-control required'))?>
           </div>
-          <?= Form::password('password', array('class' => 'form-control required'))?>
+          <?= $errors->first('password'); ?>
         </div>
-        <?= $errors->first('password'); ?>
       </div>
       @endif
     </div>
@@ -137,10 +133,7 @@
 @stop
 
 @section("js")
-<script type="text/javascript" src="{{asset('assets/js/validacao/usuarioValidator.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/validacao/validate-methods.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/js/views/usuario-form.js')}}"></script>
-<script type="text/javascript" src="{{asset('assets/js/estado_cidade.js')}}"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $('#formNewPass').validate({
@@ -158,15 +151,14 @@
         }
       }
     });
+    $('#form').validate({
+      rules: {
+        email:{        
+          email: true,
+        },
+      },
+    });
   })
-  $("#estado").change(function(){
-    findElements($("#estado").val(),$("#cidade_id"),"Estado","cidades", null);
-  })
-
-  var cidade = "{{isset($usuario) ? $usuario->individuo->endereco->cidade_id : Input::old('cidade_id') }}";
-  if(cidade){
-    findElements($("#estado").val(),$("#cidade_id"),"Estado","cidades",cidade);
-  }
 </script>
 
 @if(Session::get('modal_show'))

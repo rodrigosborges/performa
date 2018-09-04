@@ -3,9 +3,9 @@
 class Resposta extends Eloquent{
     protected $table = 'respostas';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
-    protected $fillable = array('texto','anexo','tipo_resposta_id');
+    protected $fillable = array('texto','tipo_resposta_id');
 
     public function viagens(){
         return $this->belongsTo('Viagem','viagem_id');

@@ -7,9 +7,11 @@ class Viagem extends Eloquent{
 
     protected $table = 'viagens';
 
-    protected $fillable = array('cidade_origem','bairro_id','numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino', 'anexo',
+    protected $fillable = array('cidade_origem','bairro_id','numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino',
         'roteiro_predefinido', 'roteiro_especificar','sugestao','organizacao_id', 'destino_id','quantidade_vez_id', 'empresa_veiculo');
 
+    public $timestamps = true;
+    
     public function cidade_origem(){
         return $this->belongsTo('Cidade', 'cidade_origem', 'id');
     }
@@ -40,6 +42,10 @@ class Viagem extends Eloquent{
 
     public function respostas(){
         return $this->hasMany('Resposta', 'viagem_id', 'id');
+    }
+
+    public function anexos(){
+        return $this->hasMany('Anexo', 'viagem_id', 'id');
     }
 
     public function pessoa(){
@@ -115,8 +121,21 @@ class Viagem extends Eloquent{
     public function setSaidaAttribute($saida){
         $this->attributes['saida'] = FormatterHelper::brToEnDate($saida);
     }
-    
+
     public function getSaidaAttribute(){
         return FormatterHelper::enToBrDate($this->attributes['saida']);
     }
+
+    public function setRoteiroPredefinidoAttribute($roteiro){
+        if($roteiro == 0)
+            $this->attributes['roteiro_especificar'] = null;
+        $this->attributes['roteiro_predefinido'] = $roteiro;
+    }
+
+    public function setPrimeiraVezAttribute($vez){
+        if($vez == 1)
+            $this->attributes['quantidade_vez_id'] = null;
+        $this->attributes['primeira_vez'] = $vez;
+    }
+
 }

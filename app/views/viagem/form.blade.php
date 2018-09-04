@@ -76,7 +76,7 @@
             </div>
 
             <div class="form-group col-md-12">
-                <label>Documento do solicitante <span>*</span> {{isset($viagem)?"(Inserir somente em caso de alteração o arquivo)":""}}</label>
+                <label>Documento do solicitante <span>*</span> {{isset($viagem)?"(Inserir somente em caso de alteração do arquivo)":""}}</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -196,7 +196,7 @@
                             <span class="fas fa-building"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa[nome]', isset($viagem->empresa)? $viagem->empresa->nome : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa'))?>
+                    <?= Form::text('empresa[nome]', !empty($viagem->empresa) ? $viagem->empresa->nome : null, array('class' => 'form-control required', 'placeholder' => 'Nome da empresa'))?>
                 </div>
                 <?= $errors->first('empresa.nome') ?>
             </div>
@@ -208,7 +208,7 @@
                             <span class="fas fa-at"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa[contato][email]', isset($viagem->empresa)? $viagem->empresa->contato->email : null, array('class' => 'form-control required', 'placeholder' => 'E-mail'))?>
+                    <?= Form::text('empresa[contato][email]', !empty($viagem->empresa) ? $viagem->empresa->contato->email : null, array('class' => 'form-control required', 'placeholder' => 'E-mail'))?>
                 </div>
                 <?= $errors->first('empresa.contato.email') ?>
             </div>
@@ -221,7 +221,7 @@
                             <span class="fas fa-phone"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa[contato][telefone]', isset($viagem->empresa)? $viagem->empresa->contato->telefone : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Telefone'))?>
+                    <?= Form::text('empresa[contato][telefone]', !empty($viagem->empresa) ? $viagem->empresa->contato->telefone : null, array('class' => 'form-control required telefone_numero', 'placeholder' => 'Telefone'))?>
                 </div>
                 <?= $errors->first('empresa.contato.telefone') ?>
             </div>
@@ -234,7 +234,7 @@
                             <span class="fas fa-desktop"></span>
                         </span>
                     </div>
-                    <?= Form::text('empresa[site]', isset($viagem->empresa)? $viagem->empresa->site : null, array('class' => 'form-control', 'placeholder' => 'Site'))?>
+                    <?= Form::text('empresa[site]', !empty($viagem->empresa) ? $viagem->empresa->site : null, array('class' => 'form-control', 'placeholder' => 'Site'))?>
                 </div>
                 <?= $errors->first('empresa.site') ?>
             </div>
@@ -248,7 +248,7 @@
                             <span class="fas fa-map"></span>
                         </span>
                     </div>
-                    <?= Form::select('empresa[estado]', $data['estados'],isset($viagem->empresa)? $viagem->empresa->cidade->estado_id :null,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
+                    <?= Form::select('empresa[estado]', $data['estados'],!empty($viagem->empresa) ? $viagem->empresa->cidade->estado_id :null,array('class'=>'form-control required estado','id'=>'estado','aria-required'=>"true"))?>
                 </div>
                 <?= $errors->first('empresa.estado'); ?>
             </div>
@@ -261,7 +261,7 @@
                             <span class="fas fa-map-marker-alt"></span>
                         </span>
                     </div>
-                    <?= Form::select('empresa[cidade_id]', isset($viagem->empresa) ? $data['cidades_empresa'] : [],isset($viagem->empresa)? $viagem->empresa->cidade_id :null,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>                </div>
+                    <?= Form::select('empresa[cidade_id]', !empty($viagem->empresa) ? $data['cidades_empresa'] : [],isset($viagem->empresa)? $viagem->empresa->cidade_id :null,array('class'=>'form-control required cidade_id','id'=>'cidade_id','aria-required'=>"true"))?>                </div>
                 <?= $errors->first('empresa.cidade_id'); ?>
             </div>
         </div>
