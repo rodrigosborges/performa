@@ -15,15 +15,19 @@ $(document).ready(function(){
                 "</td>"+($("#form").attr('data-veiculo_id')? "<td></td>" : "")+"<td><button type='button' class='btn btn-outline-danger btn-block' onclick='excluirVeiculo(`"+hash+"`)'>Excluir</button></td></tr>"
             )
         }
-        addRemoveRule($("#veiculo").find("input:text, input:file, select"), "remove", "has_added")})
+        addRemoveRule($("#veiculo").find("input:text, input:file, select"), "remove", "has_added")
+    })
 
-        $(".send-form").on('click', function(){
-            if($("#form").valid()){
-                $(".veiculo").last().find("input:text, input:file, select").prop("disabled",true)
-            }
+    $(".send-form").on('click', function(){
+        $(".has_added").each(function(index){
+            $(this).rules("add",{ has_added: "veiculotable" })
         })
+        if($("#form").valid()){
+            $(".veiculo").last().find("input:text, input:file, select").prop("disabled",true)
+        }
+    })
 
-   })
+})
 
 function excluirVeiculoExistente(id){
     $(".excluirVeiculos").append("<input name='excluir[]' type='hidden' value='"+id+"'>")

@@ -180,7 +180,7 @@
                 </tbody>
             </table>
 
-            @if($viagem->anexos)
+            @if($viagem->anexos()->count())
                 <h4 class="section-title">Anexos</h4>
                 @foreach($viagem->anexos as $anexo)
                     <div class="row col-md-12">

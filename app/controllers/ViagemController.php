@@ -335,7 +335,7 @@ class ViagemController extends \BaseController {
 
 			Mail::send('email.comunicar', ['dados' => $params], function($message) use($params, $nome){
 				$message->subject($params['assunto']);
-				if(isset($zip))
+				if($nome != "")
 					$message->attach(base_path()."/respostas/$nome.zip");
 				$message->to($params['to']);
 			});

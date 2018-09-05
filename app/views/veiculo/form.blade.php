@@ -73,7 +73,7 @@
                                 <span class="fas fa-list"></span>
                             </span>
                             </div>
-                            <?= Form::select('tipo_veiculo_id[]', $data['tiposveiculos'], null,array('class'=>'form-control','aria-required'=>"true" ))?>
+                            <?= Form::select('tipo_veiculo_id[]', $data['tiposveiculos'], null,array('class'=>'form-control has_added','aria-required'=>"true" ))?>
                         </div>
                     <?= $errors->first('tipo_veiculo_id.*'); ?>
                     </div>  
@@ -85,7 +85,7 @@
                                 <span class="fas fa-car"></span>
                             </span>
                             </div>
-                            <?= Form::text('placa[]', null,array('class'=>'form-control placa', 'id' => "placa"))?>
+                            <?= Form::text('placa[]', null,array('class'=>'form-control placa has_added', 'id' => "placa"))?>
                         </div>
                     <?= $errors->first('placa.*'); ?>
                     </div>   
@@ -97,7 +97,7 @@
                                 <span class="fas fa-id-card"></span>
                             </span>
                             </div>
-                            <?= Form::text('registro[]', null,array('class'=>'form-control','aria-required'=>"true" ))?>
+                            <?= Form::text('registro[]', null,array('class'=>'form-control has_added','aria-required'=>"true" ))?>
                         </div>
                     <?= $errors->first('registro.*'); ?>
                     </div> 
@@ -109,7 +109,7 @@
                                     <span class="fas fa-folder-open" aria-hidden="true"></span>
                                 </span>
                             </div>
-                            <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'veiculo')) ?>
+                            <?= Form::file('documentos[veiculo][]', array('style' => 'opacity: 1;','class' => 'form-control has_added', 'id' => 'veiculo')) ?>
                         </div>
                         <?= $errors->first('documentos.veiculo.*') ?>
                     </div>
@@ -121,7 +121,7 @@
                                     <span class="fas fa-folder-open" aria-hidden="true"></span>
                                 </span>
                             </div>
-                            <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control', 'id' => 'regularidade')) ?>
+                            <?= Form::file('documentos[regularidade][]', array('style' => 'opacity: 1;','class' => 'form-control has_added', 'id' => 'regularidade')) ?>
                         </div>
                         <?= $errors->first('documentos.regularidade.*') ?>
                     </div>      
