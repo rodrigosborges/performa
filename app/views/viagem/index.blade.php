@@ -45,7 +45,42 @@
 					<?= Form::text('nome', null, array('class' => 'form-control', 'placeholder' => 'Nome do solicitante')) ?>
 				</div>
 			</div>
+		</div>
 
+		<div class="row">
+			<div class="form-group col-md-4">
+				<label>De</label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							<span class="fas fa-calendar"></span>
+						</span>
+					</div>
+					<?= Form::text('de', null, array('class' => 'form-control data', 'placeholder' => '00/00/0000')) ?>
+				</div>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Até </label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							<span class="fas fa-calendar"></span>
+						</span>
+					</div>
+					<?= Form::text('ate', null, array('class' => 'form-control data', 'placeholder' => '00/00/0000')) ?>
+				</div>
+			</div>
+			<div class="form-group col-md-4">
+				<label>Tipo de filtro de data</label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							<span class="fas fa-list"></span>
+						</span>
+					</div>
+					<?= Form::select('tipodata', ['1' => 'Cadastro','2' => 'Chegada'], null, array('class' => 'form-control')) ?>
+				</div>
+			</div>
 		</div>
 
 		<?= Form::button('Pesquisar', array('class' => 'btn btn-success btn-lg btn-block', 'id' => 'enviaform')) ?>

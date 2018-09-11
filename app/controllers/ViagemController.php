@@ -277,6 +277,10 @@ class ViagemController extends \BaseController {
 	public function listar($tipo){
 		$dados = Input::all();
 		$viagem = new Viagem;
+
+		$de = $dados['de'] ? (FormatterHelper::brToEnDate($dados['de'])." 00:00:00") : "";
+		$ate = $dados['ate'] ? (FormatterHelper::brToEnDate($dados['ate'])." 23:59:59") : "";
+		$tipodata = $dados['tipodata'] == 1 ? "created_at" : "chegada";
 				
 		if($dados['status_id'])
 			$viagem = $viagem->where('status_id',$dados['status_id']);
@@ -286,6 +290,12 @@ class ViagemController extends \BaseController {
 			$viagem = $viagem->where('pessoas.nome','LIKE',"%".$dados['nome']."%");
 			$viagem = $viagem->where('pessoas.cpf','LIKE',"%".FormatterHelper::somenteNumeros($dados['cpf'])."%");
 		}
+
+		if($de)
+			$viagem = $viagem->where($tipodata, ">=", $de);
+
+		if($ate)
+			$viagem = $viagem->where($tipodata, "<=", $ate);
 
 		if($tipo == 'inativos')
 			$viagem = $viagem->onlyTrashed();

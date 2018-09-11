@@ -126,6 +126,10 @@ class Viagem extends Eloquent{
         return FormatterHelper::enToBrDate($this->attributes['saida']);
     }
 
+    public function getCreatedAtAttribute(){
+        return FormatterHelper::setFullDate($this->attributes['created_at']);
+    }
+
     public function setRoteiroPredefinidoAttribute($roteiro){
         if($roteiro == 0)
             $this->attributes['roteiro_especificar'] = null;

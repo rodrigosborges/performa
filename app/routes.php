@@ -33,6 +33,7 @@ Route::group(array('before' => 'auth'), function(){
 	Route::get('viagem/listar/{tipo}', 'ViagemController@listar');
 	Route::post('viagem/responder/{id}','ViagemController@responder');
 	Route::get('{model}/{id}/restore', 'BaseController@restore');
+	Route::get('relatorios','RelatorioController@index');
 });
 Route::get('download/{caminho}/{arquivo}','BaseController@download');
 

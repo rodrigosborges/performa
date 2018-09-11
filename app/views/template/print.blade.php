@@ -28,7 +28,7 @@
             <div class="row" style="vertical-align: middle">
                 <img class="imagem" src="{{ asset('assets/img/Prefeitura-1.jpg') }}" alt="">
                 <div class="print-line"><b>PREFEITURA MUNICIPAL DA ESTÂNCIA BALNEÁRIA DE CARAGUATATUBA</b></div>
-                <div class="print-line"><b>SISTEMA E-LICITAÇÕES</b></div>
+                <!-- <div class="print-line"><b>SISTEMA E-LICITAÇÕES</b></div> -->
             </div>
         </header>
         @yield('footer')

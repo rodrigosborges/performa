@@ -32,6 +32,7 @@
 					@foreach(Status::all() as $status)
 						<li class="nav-item"><a href="{{url('viagem?status_id='.$status->id)}}" class="nav-link"> {{$status->nome}} <span class="badge badge-secondary">{{Viagem::where('status_id',$status->id)->count();}}</span></a></li>
 					@endforeach
+				<li class="nav-item"><a href="{{url('relatorios')}}" class="nav-link"> Relatórios </a></li>
 				@endif
 				
 			</ul>
