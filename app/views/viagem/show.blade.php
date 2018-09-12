@@ -157,7 +157,7 @@
                 </div>
                 @endif
             </div>
-
+            @if($viagem->veiculos()->count())
             <h4 class="section-title">Veículos</h4>
             <table class="table table-bordered" id="veiculotable">
                 <thead>
@@ -179,6 +179,7 @@
                     @endforeach
                 </tbody>
             </table>
+            @endif
 
             @if($viagem->anexos()->count())
                 <h4 class="section-title">Anexos</h4>
@@ -280,7 +281,7 @@
                     <?= $errors->first('texto') ?>
                 </div>
             </div>    
-            <?= Form::submit('Responder', array('class' => 'btn btn-outline-success btn-block'));?>
+            <?= Form::submit('Responder', array('class' => 'btn btn-success btn-block send-form'));?>
             <?= Form::close() ?>
         </div>
     </div>
@@ -297,6 +298,12 @@
                     }
                 },
                 messages:{}
+            })
+            $(".send-form").on('click',function(){
+                if($("#form").valid()){
+                    $(".send-form").prop("disabled",true)
+                    $("#form").submit()
+                }
             })
         })
     </script>

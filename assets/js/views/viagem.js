@@ -10,6 +10,13 @@ function especificar(input, outros, target){
     }
 }
 
+$(".send-form").on('click',function(){
+    if($("#form").valid()){
+        $(".send-form").prop("disabled",true) 
+        $("#form").submit()  
+    } 
+})
+
 $(document).ready(function(){
 
     $("input[name=roteiro_predefinido]").on('change',function(){

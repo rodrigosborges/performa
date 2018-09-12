@@ -109,6 +109,8 @@
 
 @section('js')
 
+<script type="text/javascript" src="{{asset('assets/js/validacao/pesquisaValidator.js')}}"></script>
+
 <script>
 	function pesquisar(){
 		listagem(main_url+"viagem/listar/ativos",'ativos','form')
@@ -130,7 +132,8 @@
 	})
 
 	$("#enviaform").on('click',function(){
-		pesquisar()
+		if($("#form").valid())
+			pesquisar()
 	})
 
 </script>

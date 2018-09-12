@@ -24,6 +24,8 @@ $(document).ready(function(){
         })
         if($("#form").valid()){
             $(".veiculo").last().find("input:text, input:file, select").prop("disabled",true)
+            $(".send-form").prop("disabled",true)    
+            $("#form").submit()
         }
     })
 

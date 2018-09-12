@@ -521,7 +521,7 @@
             @endif
 
 
-            <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block'));?>
+            <?= Form::submit(isset($viagem)?'Atualizar':'Cadastrar', array('class' => 'btn btn-success btn-block send-form'));?>
             <?= Form::close() ?>
         </div>
         @if(isset($viagem) && $viagem->respostas()->count() > 0)
