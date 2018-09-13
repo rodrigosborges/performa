@@ -22,6 +22,7 @@ class ViagemController extends \BaseController {
 			'quantidadesvezes'	=> MainHelper::fixArray(QuantidadeVez::all(),'id','nome'),
 			'bairros'			=> MainHelper::fixArray(Bairro::all(),'id','nome'),
 			'organizacoes'		=> Organizacao::all(),
+			'estacionamentos'	=> MainHelper::fixArray(Estacionamento::all(),'id','nome'),
 			'url'				=> url("viagem"),
 			'method'			=> 'POST',
 			'id'				=>	null

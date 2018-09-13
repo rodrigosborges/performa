@@ -10,6 +10,23 @@ function especificar(input, outros, target){
     }
 }
 
+function estacionamento(){
+    var val = $('input[name=estacionamento_proprio]:checked').val()
+    var divfalse = $(".estacionamento_false")
+    var divtrue = $(".estacionamento_true")
+    if(val == 1){
+        divfalse.hide();
+        divtrue.show();
+        divfalse.find("input:select").addClass("required").prop("disabled",true)
+        divtrue.find("input:file").removeClass("required").prop("disabled",false)
+    }else{
+        divtrue.hide();
+        divfalse.show();    
+        divfalse.find("input:select").removeClass("required").prop("disabled",false)
+        divtrue.find("input:file").addClass("required").prop("disabled",true)
+    }
+}
+
 $(".send-form").on('click',function(){
     if($("#form").valid()){
         $(".send-form").prop("disabled",true) 
@@ -18,6 +35,11 @@ $(".send-form").on('click',function(){
 })
 
 $(document).ready(function(){
+    estacionamento();
+
+    $("input[name=estacionamento_proprio]").on('change',function(){
+        estacionamento();
+    })
 
     $("input[name=roteiro_predefinido]").on('change',function(){
         if($(this).val() == 1){

@@ -35,6 +35,10 @@ class Viagem extends Eloquent{
     public function organizacao(){
         return $this->belongsTo('Organizacao', 'organizacao_id', 'id');
     }
+    
+    public function estacionamento(){
+        return $this->belongsTo('Estacionamento', 'estacionamento_id', 'id');
+    }
 
     public function status(){
         return $this->belongsTo('Status', 'status_id', 'id');

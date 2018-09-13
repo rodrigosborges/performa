@@ -382,6 +382,47 @@
                     </div>
                 <?= $errors->first('bairro_id'); ?>
                 </div>  
+
+                <div class="form-group col-md-6">
+                    <label>Local possui estacionamento próprio? <span>*</span></label>
+                    <div class="input-group">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <?= Form::radio('estacionamento_proprio', 1, (!isset($viagem) || (isset($viagem) && $viagem->estacionamento_proprio == 1)) ? true : false,array('class' => 'custom-control-input required', 'id'=>"estacionamento_proprio_1")) ?>
+                            <label class="custom-control-label" for="estacionamento_proprio_1">Sim</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <?= Form::radio('estacionamento_proprio', 0, (isset($viagem) && $viagem->estacionamento_proprio == 0) ? true : false,array('class' => 'custom-control-input required', 'id'=>"estacionamento_proprio_0")) ?>
+                            <label class="custom-control-label" for="estacionamento_proprio_0">Não</label>
+                        </div>
+                    </div>
+                <?= $errors->first('estacionamento_proprio'); ?>
+                </div>
+
+                <div class="form-group col-md-6 estacionamento_false">
+                    <label>Estacionamento <span>*</span></label>
+                    <div class="input-group recontar">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <span class="fas fa-list"></span>
+                        </span>
+                        </div>
+                        <?= Form::select('estacionamento_id', $data['estacionamentos'],isset($viagem) ? $viagem->estacionamento_id : null,array('class'=>'form-control','aria-required'=>"true"))?>
+                    </div>
+                <?= $errors->first('estacionamento_id'); ?>
+                </div>  
+
+                <div class="form-group col-md-6 estacionamento_true">
+                    <label>Imagens do estacionamento <span>*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <span class="fas fa-folder-open" aria-hidden="true"></span>
+                            </span>
+                        </div>
+                        <?= Form::file('estacionamento_anexos[]', array('style' => 'opacity: 1;','class' => 'form-control ', 'id' => 'estacionamento','multiple')) ?>
+                    </div>
+                    <?= $errors->first('estacionamento_anexos') ?>
+                </div>
                 
                 <div class="form-group col-md-6">
                     <label>Local para refeições <span>*</span></label>
@@ -463,7 +504,7 @@
                 </div> 
 
                 <div class="form-group col-md-6">
-                    <label>Tem roteiro pré-definido? <span>*</span></label>
+                    <label>Tem roteiro predefinido? <span>*</span></label>
                     <div class="input-group">
                         <div class="custom-control custom-radio custom-control-inline">
                             <?= Form::radio('roteiro_predefinido', 1, (isset($viagem) && $viagem->roteiro_predefinido == 1) ? true : false,array('class' => 'custom-control-input required', 'id'=>"tipo_roteiro_1")) ?>

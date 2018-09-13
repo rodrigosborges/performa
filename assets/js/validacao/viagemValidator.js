@@ -48,6 +48,9 @@ $(document).ready(function(){
 			"anexo[]" :{
 				multiple_extensions: 'jpg|jpeg|png|pdf',
 			},
+			"estacionamento_anexos[]" :{
+				multiple_extensions: 'jpg|jpeg|png|pdf',
+			},
 		},
 		messages:{}
 	})
