@@ -47,7 +47,6 @@ function addRemoveRule(inputs, param, rule){
             $(input).rules("remove","has_added")
         }else{
             $(input).rules("remove","required")
-            $(input).rules("add",{ has_added:"veiculotable" })
         }
     })
 }

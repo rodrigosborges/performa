@@ -1,9 +1,5 @@
 <?php
 
-Route::get('/', function(){
-	return View::make('index');
-});
-
 Route::group(array('before' => 'guest'),function(){
 	Route::get('login','LoginController@index');
 	Route::post('login', ['before' => 'login', 'uses' => 'LoginController@login']);
@@ -18,16 +14,17 @@ Route::group(array('before' => 'guest'),function(){
 	Route::get('usuario/atualizarSenha', 'UsuarioController@mudarSenha');
 });
 
-Route::resource('viagem','ViagemController', ['only' => ['create','edit','update']]);
+Route::resource('viagem','ViagemController', ['only' => ['create','store','edit','update']]);
 
 Route::resource('veiculo','VeiculoController');
 
 Route::get('findElements/{model}/{relacao}/{id}', 'QuerieHelper@findElements');
 
 Route::group(array('before' => 'auth'), function(){
+	Route::get('/', function(){ return View::make('index'); });
 	Route::get('logout','LoginController@logout');
 	Route::get('reset/password/{id}','UsuarioController@password');
-	Route::resource('viagem','ViagemController', ['except' => ['create','edit','update']]);
+	Route::resource('viagem','ViagemController', ['except' => ['create','store','edit','update']]);
 	Route::post('{tipo}/password/{id}','UsuarioController@resetPass');
 	Route::resource('usuario','UsuarioController', array('only' => ['create','store','edit','update']));
 	Route::get('viagem/listar/{tipo}', 'ViagemController@listar');

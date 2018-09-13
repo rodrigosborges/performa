@@ -27,8 +27,8 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				
-				@if(Auth::check())
 				<li class="nav-item"><a href="{{url('viagem/create')}}" class="nav-link"> Cadastrar </a></li>
+				@if(Auth::check())
 					@foreach(Status::all() as $status)
 						<li class="nav-item"><a href="{{url('viagem?status_id='.$status->id)}}" class="nav-link"> {{$status->nome}} <span class="badge badge-secondary">{{Viagem::where('status_id',$status->id)->count();}}</span></a></li>
 					@endforeach
