@@ -7,7 +7,7 @@ class RelatorioController extends Controller {
             return Self::$tipo(Input::except('tipo'));
         $data = [
             'tipos' => [
-                ''                => 'Selecione',
+                ''                  => 'Selecione',
                 'ViagemAtrativo'    => 'Atrativos',
                 'ViagemMotivo'      => 'Motivos',
                 'ViagemRefeicao'    => 'Locais para refeições',

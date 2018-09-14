@@ -19,6 +19,9 @@
     <div class="card-body tab-content">
         <div id="informacoes" role="tabpanel" aria-labelledby="informacoes-tab" class="tab-pane fade active show">
             <h5>ATENÇÃO! A SOLICITAÇÃO DEVE SER APRESENTADA COM, NO MÍNIMO, 10 DIAS ÚTEIS DE ANTECEDÊNCIA, A CONTAR DA DATA DA VIAGEM, SOB PENA DE INDEFERIMENTO.</h5>
+            @if(isset($viagem))
+            <br><h6>(1) -> Inserir somente em caso de alteração de arquivo</h6><br>
+            @endif
             <?= Form::open(array('url' => $data['url'], 'method' => $data['method'],'data-viagem_id'=> $data['id'], 'files' => true,'id' => "form"));?>
             <h4 class="section-title">Responsável pela organização da viagem</h4>
             <div class="row">
@@ -88,7 +91,7 @@
                 </div>
 
                 <div class="form-group col-md-12">
-                    <label>Documento do solicitante <span>*</span> {{isset($viagem)?"(Inserir somente em caso de alteração do arquivo)":""}}</label>
+                    <label>Documento do solicitante <span>*</span> {{isset($viagem)?"(1)":""}}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
@@ -412,7 +415,7 @@
                 </div>  
 
                 <div class="form-group col-md-6 estacionamento_true">
-                    <label>Imagens do estacionamento <span>*</span></label>
+                    <label>Imagens do estacionamento <span>*</span>{{isset($viagem)?" (1)":""}}</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
@@ -423,6 +426,20 @@
                     </div>
                     <?= $errors->first('estacionamento_anexos') ?>
                 </div>
+
+                @if(isset($viagem) && $viagem->estacionamento_proprio == 1)
+                    <div class="form-group col-md-6">
+                        <label>Arquivo armazenado</label>
+                        <div class="input-group">
+                            <span class="form-control">{{$viagem->estacionamento_anexo}}</span>
+                            <div class="input-group-append">
+                                <a class="input-group-text" href='{{ url ("download/estacionamentos/".$viagem->estacionamento_anexo)}}' title="Download do arquivo">
+                                    <span class="fa fa-download"> Download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 
                 <div class="form-group col-md-6">
                     <label>Local para refeições <span>*</span></label>

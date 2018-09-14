@@ -8,7 +8,7 @@ class Viagem extends Eloquent{
     protected $table = 'viagens';
 
     protected $fillable = array('cidade_origem','bairro_id','numeroPessoas', 'chegada', 'saida', 'primeira_vez', 'local_destino',
-        'roteiro_predefinido', 'roteiro_especificar','sugestao','organizacao_id', 'destino_id','quantidade_vez_id', 'empresa_veiculo');
+        'roteiro_predefinido', 'roteiro_especificar','sugestao','organizacao_id', 'destino_id','quantidade_vez_id', 'empresa_veiculo', 'estacionamento_id', 'estacionamento_proprio');
 
     public $timestamps = true;
     

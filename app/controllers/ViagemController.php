@@ -38,7 +38,6 @@ class ViagemController extends \BaseController {
 			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
 			return Redirect::back()->withInput()->withErrors($validator)->with('warning','Alguns campos são obrigatórios, favor preenche-los corretamente.');
 		}
-		
 		DB::beginTransaction();
 		try{
 			#troca os campos com valores "" por null
@@ -76,8 +75,7 @@ class ViagemController extends \BaseController {
 				$pessoa->contato()->update($dados['pessoa']['contato']);
 			} 
 			$viagem->pessoa()->associate($pessoa);
-
-
+      
 			#cadastra a empresa caso a viagem seja organizada por uma
 			if($dados['organizacao_id'] == 1){
 				$contato_empresa = Contato::create($dados['empresa']['contato']);
@@ -87,6 +85,23 @@ class ViagemController extends \BaseController {
 			}
 
 			$viagem->save();
+
+			if($dados['estacionamento_proprio'] == 1){
+				$zip = new ZipArchive;
+				$zip->open(base_path()."/estacionamentos/$viagem->id-estacionamento.zip", ZipArchive::CREATE);
+				mkdir(base_path()."/estacionamentos/$viagem->id-estacionamento");
+				foreach($dados['estacionamento_anexos'] as $key => $anexo){
+					$ext = pathinfo($_FILES['estacionamento_anexos']['name'][$key])['extension'];
+					$file = base_path()."/estacionamentos/$viagem->id-estacionamento/$viagem->id-estacionamento[$key].".$ext;
+					move_uploaded_file($_FILES['estacionamento_anexos']['tmp_name'][$key],$file);
+				}
+				$options = array('add_path' => ' ', 'remove_all_path' => TRUE);
+				$zip->addGlob(base_path()."/estacionamentos/$viagem->id-estacionamento/*", GLOB_BRACE, $options);
+				$zip->close();
+				File::deleteDirectory(base_path()."/estacionamentos/$viagem->id-estacionamento");
+				$viagem->estacionamento_anexo = "$viagem->id-estacionamento"; 
+				$viagem->update();
+			} 
 			
 			#salva os relacionamentos many to many da viagem
 			MainHelper::manyToMany($viagem->tiposAtrativos(), $dados['tipoatrativo'], @$dados['especificar_atrativo']);
@@ -108,6 +123,7 @@ class ViagemController extends \BaseController {
 			});
 
 		}catch(Exception $e){
+			return $e->getMessage();
 			DB::rollback();
 			return Redirect::back()->withInput()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
 			Caso o erro persista, contate o suporte técnico.');
@@ -144,6 +160,7 @@ class ViagemController extends \BaseController {
 			'bairros'			=> MainHelper::fixArray(Bairro::all(),'id','nome'),
 			'organizacoes'		=> Organizacao::all(),
 			'url'				=> url("viagem/$id"),
+			'estacionamentos'	=> MainHelper::fixArray(Estacionamento::all(),'id','nome'),
 			'method'			=> 'PUT',
 			'id'				=>	$id
 		];
@@ -209,6 +226,29 @@ class ViagemController extends \BaseController {
 				Self::delete_directory(base_path()."/anexos/$nome");
 				$anexo->nome = "$nome.zip";
 				$viagem->anexos()->save($anexo);
+			}
+			
+			if(!empty($dados['estacionamento_anexos'])){
+				if(file_exists(base_path()."/estacionamentos/$viagem->id-estacionamento.zip"));
+					unlink(base_path()."/estacionamentos/$viagem->id-estacionamento.zip");
+			}
+			
+			if($dados['estacionamento_proprio'] == 1 && !empty($dados['estacionamento_anexos'])){
+				$zip = new ZipArchive;
+				$zip->open(base_path()."/estacionamentos/$viagem->id-estacionamento.zip", ZipArchive::CREATE);
+					
+				mkdir(base_path()."/estacionamentos/$viagem->id-estacionamento");
+				foreach($dados['estacionamento_anexos'] as $key => $anexo){
+					$ext = pathinfo($_FILES['estacionamento_anexos']['name'][$key])['extension'];
+					$file = base_path()."/estacionamentos/$viagem->id-estacionamento/$viagem->id-estacionamento[$key].".$ext;
+					move_uploaded_file($_FILES['estacionamento_anexos']['tmp_name'][$key],$file);
+				}
+				$options = array('add_path' => ' ', 'remove_all_path' => TRUE);
+				$zip->addGlob(base_path()."/estacionamentos/$viagem->id-estacionamento/*", GLOB_BRACE, $options);
+				$zip->close();
+				File::deleteDirectory(base_path()."/estacionamentos/$viagem->id-estacionamento");
+				$viagem->estacionamento_anexo = "$viagem->id-estacionamento.zip"; 
+				$viagem->update();
 			}
 
 			#create ou update de pessoa conforme o cpf

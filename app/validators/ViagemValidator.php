@@ -56,6 +56,18 @@ Class ViagemValidator{
                 'especificar_visitante' => 'required',
             ];
         }
+
+        if($dados['estacionamento_proprio'] == 1){
+            foreach($dados['estacionamento_anexos'] as $key=>$anexo){
+                $rules += [
+                    "estacionamento_anexos.$key" => ($id ? "" : "required |").'mimes:jpeg,jpg,png,pdf'
+                ];
+            }
+        }else{
+            $rules += [
+                'estacionamento_id' => 'required',
+            ];
+        }
             
         return $rules;
     }
