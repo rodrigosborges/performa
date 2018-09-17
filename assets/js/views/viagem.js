@@ -14,16 +14,17 @@ function estacionamento(){
     var val = $('input[name=estacionamento_proprio]:checked').val()
     var divfalse = $(".estacionamento_false")
     var divtrue = $(".estacionamento_true")
+    var file = $("input[name=estacionamento_proprio_file]")
     if(val == 1){
         divfalse.hide();
         divtrue.show();
-        divfalse.find("input:select").addClass("required").prop("disabled",true)
-        divtrue.find("input:file").removeClass("required").prop("disabled",false)
+        divfalse.find("select").removeClass("required").prop("disabled",true)
+        divtrue.find("input:file").addClass(file.length == 0 ? "required" : "").prop("disabled",false)
     }else{
         divtrue.hide();
         divfalse.show();    
-        divfalse.find("input:select").removeClass("required").prop("disabled",false)
-        divtrue.find("input:file").addClass("required").prop("disabled",true)
+        divfalse.find("select").addClass("required").prop("disabled",false)
+        divtrue.find("input:file").removeClass("required").prop("disabled",true)
     }
 }
 

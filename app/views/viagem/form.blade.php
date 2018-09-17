@@ -436,6 +436,7 @@
                                 <a class="input-group-text" href='{{ url ("download/estacionamentos/".$viagem->estacionamento_anexo)}}' title="Download do arquivo">
                                     <span class="fa fa-download"> Download</span>
                                 </a>
+                                <?= Form::hidden('estacionamento_proprio_file',1) ?>
                             </div>
                         </div>
                     </div>

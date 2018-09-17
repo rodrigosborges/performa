@@ -173,7 +173,6 @@ jQuery.validator.addMethod("letras", function(value, element) {
 }, "Somente letras");
 
 jQuery.validator.addMethod("minDate", function(value, element, param) {
-  console.log(param)
   var minDate = new Date(dateReplace(param, '/', '-')), valueDate = new Date(dateReplace(value, '/', '-'));
   return valueDate < minDate ? false : true;
 }, "Data válida somente a partir de {0}");

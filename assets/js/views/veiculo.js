@@ -43,7 +43,8 @@ function excluirVeiculo(div){
 function addRemoveRule(inputs, param, rule){
     inputs.map((index,input) => {
         if(param == "add"){
-            $(input).rules("add",{ required:true })
+            if(index != 4 || (index == 4 && $("input[name=logado]").length == 0))
+                $(input).rules("add",{ required:true })
             $(input).rules("remove","has_added")
         }else{
             $(input).rules("remove","required")

@@ -176,6 +176,7 @@ class ViagemController extends \BaseController {
 
 	public function update($id){
 		$dados = Input::except('pessoa.cpf');
+		$dados['file_exists'] = file_exists(base_path()."/estacionamentos/$id-estacionamento.zip");
 		$validator = Validator::make($dados, ViagemValidator::rules($id, $dados));
 		if($validator->fails()){
 			$validator->getMessageBag()->setFormat('<label class="error">:message</label>');
@@ -228,8 +229,8 @@ class ViagemController extends \BaseController {
 				$viagem->anexos()->save($anexo);
 			}
 			
-			if(!empty($dados['estacionamento_anexos'])){
-				if(file_exists(base_path()."/estacionamentos/$viagem->id-estacionamento.zip"));
+			if(!empty($dados['estacionamento_anexos']) || $dados['estacionamento_proprio'] == 0){
+				if(file_exists(base_path()."/estacionamentos/$viagem->id-estacionamento.zip"))
 					unlink(base_path()."/estacionamentos/$viagem->id-estacionamento.zip");
 			}
 			
@@ -248,8 +249,10 @@ class ViagemController extends \BaseController {
 				$zip->close();
 				File::deleteDirectory(base_path()."/estacionamentos/$viagem->id-estacionamento");
 				$viagem->estacionamento_anexo = "$viagem->id-estacionamento.zip"; 
-				$viagem->update();
-			}
+			}else if($dados['estacionamento_proprio'] == 0)
+				$viagem->estacionamento_anexo = "";
+			
+			$viagem->update();
 
 			#create ou update de pessoa conforme o cpf
 			$pessoa = $viagem->pessoa;
@@ -397,6 +400,16 @@ class ViagemController extends \BaseController {
 		}
 		DB::commit();
 		return Redirect::back()->with('success','Solicitação respondida com sucesso!');
+	}
+
+	public function autorizacao($id){
+		$viagem = Viagem::find($id);
+		if($viagem->status_id != 4){
+			return Redirect::back()->with('error','Autorização não permitida!');
+		}
+		$pdf = PDF::loadView();
+		$pdf->loadHTML("<h1>Test</h1>");
+		return $pdf->stream();
 	}
 
 }

@@ -33,6 +33,7 @@
 						<li class="nav-item"><a href="{{url('viagem?status_id='.$status->id)}}" class="nav-link"> {{$status->nome}} <span class="badge badge-secondary">{{Viagem::where('status_id',$status->id)->count();}}</span></a></li>
 					@endforeach
 				<li class="nav-item"><a href="{{url('relatorios')}}" class="nav-link"> Relatórios </a></li>
+				<li class="nav-item"><a href="{{url('autorizacao/10')}}" class="nav-link"> Autorização </a></li>
 				@endif
 				
 			</ul>

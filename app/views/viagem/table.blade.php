@@ -22,6 +22,11 @@
                     <a href="{{url('viagem/'.$viagem->id.'/restore')}}" class="btn btn-success" title="Desativar">Restaurar</a>
                 @else
                     <a href="{{url('viagem/'.$viagem->id)}}" class="btn btn-success" title="Ver"><span class="fa fa-arrow-right"></span></a>
+                    @if($viagem->status_id == 1)
+                        <a href="{{url('veiculo?hash='.$viagem->hash)}}" class="btn btn-warning" title="Ver"><span class="fa fa-edit"></span></a>
+                    @elseif($viagem->status_id == 3)
+                        <a href="{{url('veiculo/'.$viagem->id.'/edit?hash='.$viagem->hash)}}" class="btn btn-warning" title="Ver"><span class="fa fa-edit"></span></a>
+                    @endif
                     <a href="{{url('viagem/'.$viagem->id)}}" class="delete-button btn btn-danger" title="Desativar"><span class="fa fa-trash-alt"></span></a>
                 @endif
             </div>

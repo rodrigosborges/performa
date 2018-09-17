@@ -114,7 +114,7 @@
                         <?= $errors->first('documentos.veiculo.*') ?>
                     </div>
                     <div class="form-group col-md-6">
-                        <label>Comprovação de regularidade(EMTU, ARTESP e ANTT)<span>*</span></label>
+                        <label>Comprovação de regularidade(EMTU, ARTESP e ANTT)<span>{{Auth::check() ? '' : '*'}}</span></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">
@@ -129,6 +129,7 @@
                 <hr>
             </div>
         </div>
+        <?= Auth::check() ? Form::hidden("logado",1) : "" ?>
         <div class="text-center">
             <button type="button" id="adicionarVeiculo" class="btn btn-success armazenarVeiculo">Armazenar veículo</button>
         </div>

@@ -6,7 +6,8 @@
 	"type": "project",
 	"require": {
 		"laravel/framework": "4.2.*",
-		"jimbolino/laravel-model-builder" : "dev-master"
+		"jimbolino/laravel-model-builder" : "dev-master",
+		"barryvdh/laravel-dompdf": "0.4.*"
 	},
 	"autoload": {
 		"classmap": [
