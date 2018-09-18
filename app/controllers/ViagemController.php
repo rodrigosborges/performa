@@ -404,12 +404,14 @@ class ViagemController extends \BaseController {
 
 	public function autorizacao($id){
 		$viagem = Viagem::find($id);
-		if($viagem->status_id != 4){
+		if($viagem->status_id != 4)
 			return Redirect::back()->with('error','Autorização não permitida!');
-		}
-		$pdf = PDF::loadView();
-		$pdf->loadHTML("<h1>Test</h1>");
-		return $pdf->stream();
+		$pdf = PDF::loadView("viagem.autorizacao",compact('viagem','id'));
+		$pdf->setOrientation('Landscape');
+		Mail::send('email.teste', [], function($message) use($pdf){
+			$message->subject("dsadsasa");
+			$message->to("rodrigo.borges@caraguatatuba.sp.gov.br");
+			$message->attachData($pdf->output(),"file.pdf");
+		});
 	}
-
 }
