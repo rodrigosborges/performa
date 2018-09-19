@@ -406,12 +406,19 @@ class ViagemController extends \BaseController {
 		$viagem = Viagem::find($id);
 		if($viagem->status_id != 4)
 			return Redirect::back()->with('error','Autorização não permitida!');
-		$pdf = PDF::loadView("viagem.autorizacao",compact('viagem','id'));
-		$pdf->setOrientation('Landscape');
-		Mail::send('email.teste', [], function($message) use($pdf){
-			$message->subject("dsadsasa");
-			$message->to("rodrigo.borges@caraguatatuba.sp.gov.br");
-			$message->attachData($pdf->output(),"file.pdf");
+		$pdfs = [];
+		foreach($viagem->veiculos as $veiculo){
+			$pdfs[] = [
+				PDF::loadView("viagem.autorizacao",compact('viagem','veiculo'))->setOrientation('Landscape')->output(),
+				$veiculo->placa.".pdf"
+			];
+		}
+		Mail::send('email.teste', [], function($message) use($pdfs, $viagem){
+			$message->subject("Autorização de veículos");
+			$message->to($viagem->pessoa->contato->email);
+			foreach($pdfs as $pdf){
+				$message->attachData($pdf[0],$pdf[1]);
+			}
 		});
 	}
 }

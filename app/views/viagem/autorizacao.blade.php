@@ -12,27 +12,27 @@
         </div>
         <div style="padding-top: -38px !important;">
             <div style="width: 50%; display:inline-block;">
-                <span class="values"><b>3051</b></span>
+                <span class="values"><b>{{$veiculo->numero}}</b></span>
             </div>
             <div style="width: 50%; display:inline-block;">
-                <span class="values"><b>AFZ-5980</b></span>
+                <span class="values"><b>{{$veiculo->placa}}</b></span>
             </div>
         </div>
         <div style="padding-top: -70px !important;">
             <div style="width: 45%; display:inline-block;text-align:justify;">
-                <span class="subtitles"><b>EMPRESA: </b>EMPRESA DE TRANSPORTE CHORE (ONIBUS)</span>
+                <span class="subtitles"><b>EMPRESA: </b>{{mb_strtoupper($viagem->empresa_veiculo, 'UTF-8')}} ({{mb_strtoupper($veiculo->tipo->nome, 'UTF-8')}})</span>
             </div>
             <div style="width: 45%;margin-left: 5%; display:inline-block;text-align:justify;">
-                <span class="subtitles"><b>NOME DO RESPONSÁVEL/TEL: </b>MARTINEZ BARROS</span>
+                <span class="subtitles"><b>NOME DO RESPONSÁVEL/TEL: </b>{{mb_strtoupper($viagem->pessoa->nome, 'UTF-8')}} / {{$viagem->pessoa->contato->telefone}}</span>
             </div>
         </div>
 
         <div style="padding-top: 20px !important;">
             <div style="width: 45%; display:inline-block;text-align:justify;">
-                <span class="subtitles"><b>DESTINO: </b>CLUBE ILHA MORENA AV. GUILHERME DE ALMEIDA, Nº 885, MORRO DO ALGODÃO</span>
+                <span class="subtitles"><b>DESTINO: </b>{{mb_strtoupper($viagem->local_destino, 'UTF-8')}}</span>
             </div>
             <div style="width: 45%;margin-left: 5%; display:inline-block;text-align:justify;">
-                <span class="subtitles"><b>PERÍODO: </b>19/01/2018 A 23/01/2018</span>
+                <span class="subtitles"><b>PERÍODO: </b>{{$viagem->chegada}} À {{$viagem->saida}}</span>
             </div>
         </div>
     </div>
