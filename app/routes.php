@@ -1,5 +1,5 @@
 <?php
-
+//5.6.32
 Route::group(array('before' => 'guest'),function(){
 	Route::get('login','LoginController@index');
 	Route::post('login', ['before' => 'login', 'uses' => 'LoginController@login']);

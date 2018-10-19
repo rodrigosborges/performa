@@ -59,17 +59,18 @@ class VeiculoController extends BaseController{
                 $zip->addFile($file1, "$veiculo->placa-veiculo.".$ext1);
 
                 #regularidade
-
-                $ext2 = pathinfo($_FILES['documentos']['name']['regularidade'][$key])['extension'];
-                $file2 = base_path()."/veiculos/$veiculo->placa-regularidade.".$ext2;
-                move_uploaded_file($_FILES['documentos']['tmp_name']['regularidade'][$key],
-                    $file2);
-                $zip->addFile($file2, "$veiculo->placa-regularidade.".$ext2);
-                
+                if(!empty($_FILES['documentos']['name']['regularidade'][$key])){
+                    $ext2 = pathinfo($_FILES['documentos']['name']['regularidade'][$key])['extension'];
+                    $file2 = base_path()."/veiculos/$veiculo->placa-regularidade.".$ext2;
+                    move_uploaded_file($_FILES['documentos']['tmp_name']['regularidade'][$key],
+                        $file2);
+                    $zip->addFile($file2, "$veiculo->placa-regularidade.".$ext2);
+                }
                 $zip->close();
-
                 unlink($file1);
-                unlink($file2);
+                
+                if(!empty($_FILES['documentos']['name']['regularidade'][$key]))
+                    unlink($file2);
             }
 
             $params = [
@@ -85,7 +86,8 @@ class VeiculoController extends BaseController{
 			});
 
 		}catch(Exception $e){
-			DB::rollback();
+            DB::rollback();
+            return $e->getMessage();
 			return Redirect::back()->withInput(Input::only('empresa_veiculo'))->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
 			Caso o erro persista, contate o suporte técnico.');
         }

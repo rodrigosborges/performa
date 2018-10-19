@@ -75,7 +75,7 @@
             </div>
 
             <div style="width: 40%; text-align:center;display: inline-block;">
-                <div style="padding-top: -60px;"><img class="assinatura" src="{{ asset('assets/img/assinatura.png') }}" alt=""></div>
+                <div style="padding-top: -60px;"><img class="assinatura" src="{{ asset('assets/img/ASSINATURA.png') }}" alt=""></div>
                 <div><b>SECRETARIA DE TURISMO</b></div>
             </div>
         </footer>

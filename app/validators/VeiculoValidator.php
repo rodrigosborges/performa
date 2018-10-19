@@ -11,7 +11,7 @@ Class VeiculoValidator{
         if($id == null){
             $rules += [
             "documentos.veiculo.0"      => 'required | mimes:jpeg,jpg,png,pdf',
-            "documentos.regularidade.0" => 'required | mimes:jpeg,jpg,png,pdf'
+            "documentos.regularidade.0" => (Auth::check() ? "" :'required|').'mimes:jpeg,jpg,png,pdf'
             ];
         };
         if(isset($dados['documentos'])){
