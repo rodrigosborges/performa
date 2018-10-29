@@ -27,6 +27,10 @@
                     <p class="card-text">{{$aluno->cpf}}</p>
                 </div>
                 <div class="form-group col-sm-6">
+                    <label ><strong>Idade</strong></label>
+                    <p class="card-text">{{(new DateTime())->diff(new DateTime(FormatterHelper::brToEnDate($aluno->data_nascimento)))->y}}</p>
+                </div>
+                <div class="form-group col-sm-6">
                     <label ><strong>Data de nascimento</strong></label>
                     <p class="card-text">{{$aluno->data_nascimento}}</p>
                 </div>
@@ -40,7 +44,7 @@
                 </div>
                 <div class="form-group col-sm-6">
                     <label ><strong>Plano</strong></label>
-                    <p class="card-text">{{$aluno->plano->nome}}</p>
+                    <p class="card-text">{{$aluno->plano->nome." - R$ ".number_format($aluno->plano->valor, 2, ',', ' ')}}</p>
                 </div>
                 <div class="form-group col-sm-6">
                     <label ><strong>Dia de pagamento</strong></label>
@@ -90,17 +94,40 @@
         </div>
 
         <div id="pagamentos" role="tabpanel" aria-labelledby="pagamentos-tab" class="tab-pane fade">
+            <?php 
+                setlocale( LC_ALL, 'pt_BR', 'pt_BR.iso-8859-1', 'pt_BR.utf-8', 'portuguese' );
+                date_default_timezone_set( 'America/Sao_Paulo' ); 
+            ?>
             @foreach($aluno->pagamentos as $pagamento)
-            <h4 class="section-title">Pagamento efetuado </h4>
+            <div class="row">
+                <div class="col-sm-{{$pagamento->data_pagamento ? '12' : 9}}">
+                    <h4 class="section-title" style="{{$pagamento->atrasado() ? 'color: red' : ''}}">Pagamento {{$pagamento->data_pagamento ? "" : "não"}} efetuado</h4>
+                </div>
+                <div class="col-sm-3">
+                    @if(!$pagamento->data_pagamento)
+                        <a class="btn btn-success btn-block" href="{{url('efetuarPagamento/'.$pagamento->id)}}">Pagar</a>
+                    @endif
+                </div>
+            </div>
             <div class="row col-md-12">
                 <div class="form-group col-sm-6">
-                    <label ><strong>Data</strong></label>
-                    <p class="card-text">{{$pagamento->data}}</p>
+                    <label ><strong>Mês de referência</strong></label>
+                    <p class="card-text">{{ strftime('%B de %Y', strtotime($pagamento->data)) }}</p>
                 </div>
                 <div class="form-group col-sm-6">
                     <label ><strong>Valor</strong></label>
                     <p class="card-text">R$ {{number_format($pagamento->valor, 2, ',', ' ')}}</p>
                 </div>
+                <div class="form-group col-sm-6">
+                    <label ><strong>Vencimento</strong></label>
+                    <p class="card-text">{{$aluno->pagamentos()->count() == 1 ? strftime('%d/%m/%Y',strtotime($aluno->created_at)) :$aluno->dia_pagamento.strftime('/%m/%Y', strtotime($pagamento->data))}}</p>
+                </div>
+                @if($pagamento->data_pagamento)
+                    <div class="form-group col-sm-6">
+                        <label ><strong>Data do pagamento</strong></label>
+                        <p class="card-text">{{$pagamento->data_pagamento}}</p>
+                    </div>
+                @endif
             </div>
             @endforeach
         </div>

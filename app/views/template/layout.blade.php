@@ -59,11 +59,7 @@
 				@endif
 				<div class="content-div">
 					@yield('content')
-				</div>
-				<div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 footer text-center">
-					<img src="{{asset('assets/img/logo.png')}}" width="40%" height=100px/>
-					<div style="height: 25px"></div>
-				</div>			
+				</div>	
 			</div>
 		</div>
 	</div>

@@ -15,6 +15,8 @@ class LoginController extends Controller {
       return Redirect::back()->withInput()->withErrors($validator);
     }
 
+    BaseController::gerarPagamentos();
+
     $input = Input::except('_token','g-recaptcha-response');
 
     if (Auth::attempt($input)){

@@ -4,8 +4,8 @@
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>Matrícula</th>
             <th>Nome</th>
-            <th>CPF</th>
             <th>Situação</th>
             <th></th>
         </tr>
@@ -13,9 +13,9 @@
         <tbody>
         @foreach ($elementos as $aluno)
         <tr>
+            <td>{{$aluno->matricula}}</td>
             <td>{{$aluno->nome}}</td>
-            <td>{{$aluno->cpf}}</td>
-            <td>{{$aluno->situacao()}}</td>
+            <td style="color:{{$aluno->situacao() == 'Normal' ? 'green':'red'}}">{{$aluno->situacao()}}</td>
             <td>
             <div class="btn-group">
                 @if($aluno->trashed())

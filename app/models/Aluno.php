@@ -32,6 +32,13 @@ class Aluno extends Eloquent{
     }  
     
     public function situacao(){
-        return ($this->pagamentos()->whereNull('data_pagamento')->count() > 0 ? "Em débito" : "Normal");
+        $atrasados = 0;
+        if($this->pagamentos()->whereNull('data_pagamento')->count() > 0){
+            foreach($this->pagamentos as $pagamento){
+                if($pagamento->atrasado())
+                    $atrasados++;
+            }
+        }
+        return $atrasados == 0 ? "Normal" : ($atrasados == 2 ? "Bloqueado" : "Em débito" );
     }
 }

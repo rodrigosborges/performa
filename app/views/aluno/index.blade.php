@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="card">
-    <div class="card-header"><h4>Viagens</h4></div>
+    <div class="card-header"><h4>Alunos</h4></div>
     <div class="card-body tab-content">
     <?= Form::open(array('url' => 'pesquisar','id' => 'form', 'method' => 'POST')) ?>
 		<div class="row">

@@ -9,8 +9,8 @@ class AlunoController extends \BaseController {
 
 	public function create(){
 		$data = [
-			'title'			=> "Cadastro de aluno",
-			'planos'	=> MainHelper::fixArray(Plano::all(),'id','nome'),
+			'title'				=> "Cadastro de aluno",
+			'planos'			=> MainHelper::fixArray(Plano::all(),'id','nome'),
 			'url'				=> url("aluno"),
 			'method'			=> 'POST',
 			'id'				=>	null
@@ -40,6 +40,7 @@ class AlunoController extends \BaseController {
 				$dados['matricula'] = $random;
 			}
 			$aluno = Aluno::create($dados);
+			$aluno->pagamentos()->save(new Pagamento(['valor' => $aluno->plano->valor, 'data' => date("Y-m-01")]));
 		}catch(Exception $e){
 			DB::rollback();
 			return Redirect::back()->withInput()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
@@ -47,7 +48,7 @@ class AlunoController extends \BaseController {
 		}
 		DB::commit();
 
-		return Redirect::back()->with('success', ($dados['sexo'] == 1 ? "Aluno" : "Aluna")." $aluno->nome (Matrícula $aluno->matricula) ".($dados['sexo'] == 1 ? "cadastrado" : "cadastrada")." com sucesso");
+		return Redirect::back()->with('success', "<a href='".url("aluno/$aluno->id")."'>".($dados['sexo'] == 1 ? "Aluno" : "Aluna")." $aluno->nome (Matrícula $aluno->matricula) ".($dados['sexo'] == 1 ? "cadastrado" : "cadastrada")." com sucesso</a>");
 	}
 
 	public function show($id){
@@ -129,6 +130,13 @@ class AlunoController extends \BaseController {
 		$elementos = $aluno->paginate(10);
 
 		return View::make('aluno.table', compact('elementos'));
+	}
+
+	public function efetuarPagamento($id){
+		$pag = Pagamento::find($id);
+		$pag->data_pagamento = date('Y-m-d');
+		$pag->update();
+		return Redirect::back()->with('success','Pagamento efetuado com sucesso');
 	}
 
 }

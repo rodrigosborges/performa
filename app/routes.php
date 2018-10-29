@@ -13,4 +13,5 @@ Route::group(array('before' => 'auth'), function(){
 	Route::resource('usuario','UsuarioController', array('only' => ['create','store','edit','update']));
 	Route::get('aluno/listar/{tipo}', 'AlunoController@listar');
 	Route::get('{model}/{id}/restore', 'BaseController@restore');
+	Route::get('efetuarPagamento/{id}', 'AlunoController@efetuarPagamento');
 });

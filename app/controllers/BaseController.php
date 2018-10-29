@@ -51,28 +51,6 @@ class BaseController extends Controller {
 			return $data[$resource];
 		return false;
 	}
-	
-	public function download($caminho, $arquivo){
-		return Response::download(base_path()."/$caminho/$arquivo");
-	}
-
-	function delete_directory($dirname) {
-			if (is_dir($dirname))
-			$dir_handle = opendir($dirname);
-		if (!$dir_handle)
-			return false;
-		while($file = readdir($dir_handle)) {
-			if ($file != "." && $file != "..") {
-					if (!is_dir($dirname."/".$file))
-						unlink($dirname."/".$file);
-					else
-						delete_directory($dirname.'/'.$file);
-			}
-		}
-		closedir($dir_handle);
-		rmdir($dirname);
-		return true;
-	}
 
 	public function restore($model,$id){	
 		$model = ucfirst($model);
@@ -87,7 +65,19 @@ class BaseController extends Controller {
 			return Redirect::back()->with('error','Desculpe, ocorreu um erro, favor tente novamente.<br>
 			Caso o erro persista, contate o suporte técnico.');
 		}
-		
+	}
 
+	public static function gerarPagamentos(){
+		$select = Pagamento::where('data',date("Y-m-01"))->groupBy('aluno_id')->lists('aluno_id');
+		if(Aluno::leftJoin('pagamentos','pagamentos.aluno_id','=','alunos.id')->whereNotIn('alunos.id',$select)->select('alunos.*')->count() > 0){
+			$alunos = Aluno::leftJoin('pagamentos','pagamentos.aluno_id','=','alunos.id')
+				->whereNotIn('alunos.id',$select)
+				->select('alunos.*')
+				->get();
+			foreach($alunos as $aluno){
+				if($aluno->situacao() != "Bloqueado")
+					$aluno->pagamentos()->save(new Pagamento(['valor' => $aluno->plano->valor, 'data' => date("Y-m-01")]));
+			}
+		}
 	}
 }
