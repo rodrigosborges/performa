@@ -27,7 +27,7 @@ Route::filter('auth', function(){
 		if (Request::ajax())
 			return Response::make('Unauthorized', 401);
 		else
-			return Redirect::guest('viagem/create')->with('error', 'Acesso negado');
+			return Redirect::guest('login');
 	}
 });
 

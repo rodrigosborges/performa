@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="author" content="Rodrigo Borges">
 
-	<title>Turismo</title>
+	<title>Performa Academia</title>
 
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap-dialog.min.css') }}">
@@ -13,13 +13,13 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/jquery-ui.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/chosen.min.css') }}">
-	<link rel="icon" type= "image/png" href="{{ asset('assets/img/favicon.png') }}" />
+	<link rel="icon" type= "image/png" href="{{ asset('assets/img/icon.png') }}" />
 	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-select.min.css') }}">
 	
 </head>
 <body>
 	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light border-bottom">
-		<a class="navbar-brand" href="{{url(Auth::guest() ? '/viagem/create' : '/')}}"><i class="fa fa-home"></i> Turismo</a>
+		<a class="navbar-brand" href="{{url(Auth::guest() ? '/aluno/create' : '/')}}"><img src="{{asset('assets/img/logo.png')}}" width=120px height=30px/></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -27,14 +27,8 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				
-				<li class="nav-item"><a href="{{url('viagem/create')}}" class="nav-link"> Cadastrar </a></li>
-				@if(Auth::check())
-					@foreach(Status::all() as $status)
-						<li class="nav-item"><a href="{{url('viagem?status_id='.$status->id)}}" class="nav-link"> {{$status->nome}} <span class="badge badge-secondary">{{Viagem::where('status_id',$status->id)->count();}}</span></a></li>
-					@endforeach
-				<li class="nav-item"><a href="{{url('relatorios')}}" class="nav-link"> Relatórios </a></li>
-				<li class="nav-item"><a href="{{url('autorizacao/1')}}" class="nav-link"> Autorização </a></li>
-				@endif
+				<li class="nav-item"><a href="{{url('aluno/create')}}" class="nav-link"> Cadastrar aluno</a></li>
+				<li class="nav-item"><a href="{{url('aluno')}}" class="nav-link"> Listar alunos</a></li>
 				
 			</ul>
 			<ul class="navbar-nav float-md-left">
@@ -66,16 +60,12 @@
 				<div class="content-div">
 					@yield('content')
 				</div>
-			</div>			
+				<div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 footer text-center">
+					<img src="{{asset('assets/img/logo.png')}}" width="40%" height=100px/>
+					<div style="height: 25px"></div>
+				</div>			
+			</div>
 		</div>
-	</div>
-
-	<div class="col-sm-10 offset-sm-1 col-md-8 offset-md-2 footer">
-		<small>
-			<p  class="text-center text-light">
-				Desenvolvido por Secretaria de Tecnologia da Informação
-			</p>
-		</small>
 	</div>
 
 	<script type="text/javascript">const main_url = '{{url('/')}}/';</script>

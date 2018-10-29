@@ -16,11 +16,11 @@ class Contato extends Eloquent{
     
 	public function setCelularAttribute($celular){
 		$this->attributes['celular'] = FormatterHelper::somenteNumeros($celular);
-	}  
+	}
 
 	public function setTelefoneAttribute($telefone){
 		$this->attributes['telefone'] = FormatterHelper::somenteNumeros($telefone);
-	}  
+	}
 
     public function getTelefoneAttribute(){
         return FormatterHelper::setTelefone($this->attributes['telefone']);
@@ -30,12 +30,8 @@ class Contato extends Eloquent{
         return FormatterHelper::setTelefone($this->attributes['celular']);
     }
 
-    public function pessoa(){
-        return $this->hasOne('Pessoa', 'contato_id', 'id');
-    }
-
-    public function empresa(){
-        return $this->hasOne('Empresa', 'contato_id', 'id');
+    public function aluno(){
+        return $this->hasOne('Aluno', 'contato_id', 'id');
     }
 
 }

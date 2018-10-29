@@ -2,9 +2,6 @@
 @extends ("template.login")
 <!-- Inicio da Sessão de contéudo da página -->
 @section("content")
-<div class="alert alert-info">
-  Caro usuário(a), caso não consiga realizar o login, favor utilizar o "esqueci minha senha".
-</div>
 <?= Form::open(array('url' => 'login', 'id' => 'form'))?>
 <div class="form-group">
   <?= Form::label('usuario','Usuário')?>  

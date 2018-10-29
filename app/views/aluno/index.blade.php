@@ -8,20 +8,19 @@
     <div class="card-body tab-content">
     <?= Form::open(array('url' => 'pesquisar','id' => 'form', 'method' => 'POST')) ?>
 		<div class="row">
-			<div class="form-group col-md-6">
-				<label>Status</label>
+			<div class="form-group col-md-4">
+				<label>Nome do aluno</label>
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">
-							<span class="fas fa-list-alt"></span>
+							<span class="fas fa-pencil-alt"></span>
 						</span>
 					</div>
-                    <?= Form::select('status_id', $data['status'], Input::get('status_id'), array('class' => 'form-control chosen-select','id' => 'status')) ?>
+					<?= Form::text('nome', null, array('class' => 'form-control', 'placeholder' => 'Nome do aluno')) ?>
 				</div>
 			</div>
-			
-			<div class="form-group col-md-6">
-				<label>CPF do solicitante</label>
+			<div class="form-group col-md-4">
+				<label>CPF do aluno</label>
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">
@@ -31,54 +30,15 @@
 					<?= Form::text('cpf', null, array('class' => 'form-control cpf', 'placeholder' => '999.999.999-99')) ?>
 				</div>
 			</div>
-		</div>
-
-		<div class="row">
-			<div class="form-group col-md-12">
-				<label>Nome do solicitante</label>
+			<div class="form-group col-md-4">
+				<label>Matrícula</label>
 				<div class="input-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">
 							<span class="fas fa-pencil-alt"></span>
 						</span>
 					</div>
-					<?= Form::text('nome', null, array('class' => 'form-control', 'placeholder' => 'Nome do solicitante')) ?>
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="form-group col-md-4">
-				<label>De</label>
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">
-							<span class="fas fa-calendar"></span>
-						</span>
-					</div>
-					<?= Form::text('de', null, array('class' => 'form-control data', 'placeholder' => '00/00/0000')) ?>
-				</div>
-			</div>
-			<div class="form-group col-md-4">
-				<label>Até </label>
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">
-							<span class="fas fa-calendar"></span>
-						</span>
-					</div>
-					<?= Form::text('ate', null, array('class' => 'form-control data', 'placeholder' => '00/00/0000')) ?>
-				</div>
-			</div>
-			<div class="form-group col-md-4">
-				<label>Tipo de filtro de data</label>
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">
-							<span class="fas fa-list"></span>
-						</span>
-					</div>
-					<?= Form::select('tipodata', ['1' => 'Cadastro','2' => 'Chegada'], null, array('class' => 'form-control')) ?>
+					<?= Form::text('matricula', null, array('class' => 'form-control', 'placeholder' => '9999')) ?>
 				</div>
 			</div>
 		</div>
@@ -113,8 +73,8 @@
 
 <script>
 	function pesquisar(){
-		listagem(main_url+"viagem/listar/ativos",'ativos','form')
-		listagem(main_url+"viagem/listar/inativos",'inativos','form')
+		listagem(main_url+"aluno/listar/ativos",'ativos','form')
+		listagem(main_url+"aluno/listar/inativos",'inativos','form')
 
 		$('#ativos').on('click', 'ul.pagination a', function(e){
 			e.preventDefault()

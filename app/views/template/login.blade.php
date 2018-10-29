@@ -3,17 +3,19 @@
   <noscript><meta http-equiv="refresh" content="1; URL={{url('erro')}}"/></noscript>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Turismo</title>
+  <title>Performa Academia</title>
   <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
   <link href="{{asset('assets/css/fontawesome-all.min.css')}}" rel="stylesheet">
-  <link rel="icon" type= "image/png" href="{{ asset('assets/img/favicon.png') }}" />
+  <link rel="icon" type= "image/png" href="{{ asset('assets/img/icon.png') }}" />
 </head>
 <body>
   <div class="container-fluid">
     <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 mt-5">
       <div class="card mt-5">
-        <div class="card-header"><h2 class="text-center">TURISMO</h2></div>
+        <div class="card-header text-center">
+          <img src="{{asset('assets/img/logo.png')}}" width="80%" height="15%"/>
+        </div>
         <div class="card-body">
           @include('includes.alerts')
           @yield('content')            
